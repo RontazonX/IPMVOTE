@@ -2,12 +2,13 @@
 
 import { createClient } from "@/utils/supabase/server";
 import { revalidatePath } from "next/cache";
-import crypto from "crypto";
 
 export async function addVoter(name?: string) {
   const supabase = await createClient();
 
-  const randomChars = crypto.randomBytes(2).toString("hex").toUpperCase();
+  const array = new Uint8Array(2);
+  globalThis.crypto.getRandomValues(array);
+  const randomChars = Array.from(array, (byte) => byte.toString(16).padStart(2, '0')).join('').toUpperCase();
   const token = `WIR-${randomChars}`;
   
   const finalName = name && name.trim() !== "" ? name : `Peserta ${token}`;
@@ -28,7 +29,9 @@ export async function addMultipleVoters(count: number) {
   const newVoters = [];
 
   for (let i = 0; i < count; i++) {
-    const randomChars = crypto.randomBytes(2).toString("hex").toUpperCase();
+    const array = new Uint8Array(2);
+    globalThis.crypto.getRandomValues(array);
+    const randomChars = Array.from(array, (byte) => byte.toString(16).padStart(2, '0')).join('').toUpperCase();
     const token = `WIR-${randomChars}`;
     newVoters.push({
       name: `Peserta ${token}`,

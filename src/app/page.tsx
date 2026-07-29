@@ -2,6 +2,8 @@ import Link from "next/link";
 import { ArrowRight, CheckCircle2, QrCode, ShieldCheck, Users, Building, Image as ImageIcon } from "lucide-react";
 import { createClient } from "@/utils/supabase/server";
 
+export const runtime = 'edge';
+
 export default async function LandingPage() {
   const supabase = await createClient();
   const { data: candidates } = await supabase.from("candidates").select("*").order("order_number", { ascending: true });

@@ -3,8 +3,6 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import clsx from "clsx";
 
-export const runtime = 'edge';
-
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
