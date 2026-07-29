@@ -1,0 +1,22 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #2563EB; /* blue-600 */
+  --color-primary-hover: #1D4ED8; /* blue-700 */
+  --color-secondary: #DBEAFE; /* blue-100 */
+  --color-background: #F8FAFC; /* slate-50 */
+  --color-foreground: #0F172A; /* slate-900 */
+  --color-muted: #64748B; /* slate-500 */
+}
+
+@layer base {
+  body {
+    @apply bg-[var(--color-background)] text-[var(--color-foreground)] antialiased;
+  }
+}
+
+@layer utilities {
+  .glass {
+    @apply bg-white/70 backdrop-blur-md border border-white/20;
+  }
+}
