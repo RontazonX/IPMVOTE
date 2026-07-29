@@ -5,8 +5,30 @@ import { createClient } from "@/utils/supabase/server";
 export const runtime = 'edge';
 
 export default async function LandingPage() {
-  const supabase = await createClient();
-  const { data: candidates } = await supabase.from("candidates").select("*").order("order_number", { ascending: true });
+  let candidates = null;
+  let errorMessage = null;
+  let envInfo = { url: !!process.env.NEXT_PUBLIC_SUPABASE_URL, key: !!process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY };
+
+  try {
+    const supabase = await createClient();
+    const { data, error } = await supabase.from("candidates").select("*").order("order_number", { ascending: true });
+    if (error) throw error;
+    candidates = data;
+  } catch (err: any) {
+    errorMessage = err.message || err.toString();
+  }
+
+  if (errorMessage) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center p-8 bg-red-50 text-red-900">
+        <h1 className="text-2xl font-bold mb-4">Server Runtime Error</h1>
+        <p className="mb-2"><strong>Error:</strong> {errorMessage}</p>
+        <p className="mb-2"><strong>Supabase URL Present?</strong> {envInfo.url ? "Yes" : "No"}</p>
+        <p className="mb-2"><strong>Supabase Key Present?</strong> {envInfo.key ? "Yes" : "No"}</p>
+        <p className="mt-4 text-sm opacity-70">Please check your Cloudflare Environment Variables and redeploy.</p>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-slate-50 text-slate-800 font-sans selection:bg-blue-200">
