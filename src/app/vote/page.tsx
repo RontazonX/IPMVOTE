@@ -71,7 +71,7 @@ export default function VotePage() {
       <header className="bg-white border-b border-slate-200 sticky top-0 z-40 shadow-sm">
         <div className="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center text-white font-bold text-sm">
+            <div className="w-8 h-8 bg-yellow-500 rounded-lg flex items-center justify-center text-white font-bold text-sm">
               9
             </div>
             <h1 className="font-bold text-lg hidden sm:block text-slate-800">Bilik Suara Formatur</h1>
@@ -79,7 +79,7 @@ export default function VotePage() {
           
           <div className="flex items-center gap-4">
             <div className="bg-slate-100 px-3 py-1.5 rounded-full text-sm font-medium flex items-center gap-2">
-              <span className={`${selectedIds.length === 9 ? 'text-emerald-600' : 'text-blue-600'}`}>
+              <span className={`${selectedIds.length === 9 ? 'text-emerald-600' : 'text-yellow-600'}`}>
                 {selectedIds.length} / 9
               </span>
               <span className="text-slate-500 hidden sm:inline">Terpilih</span>
@@ -95,7 +95,7 @@ export default function VotePage() {
           <p className="text-slate-600">Klik pada kartu kandidat untuk memilih. Anda wajib memilih tepat 9 orang formatur.</p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 sm:gap-6">
           {candidates.map((candidate) => {
             const isSelected = selectedIds.includes(candidate.id);
             
@@ -104,42 +104,47 @@ export default function VotePage() {
                 key={candidate.id}
                 onClick={() => toggleSelection(candidate.id)}
                 className={`
-                  relative bg-white rounded-2xl border-2 transition-all duration-200 cursor-pointer overflow-hidden
+                  group relative bg-white rounded-2xl sm:rounded-3xl border-2 transition-all duration-300 cursor-pointer overflow-hidden flex flex-col
                   ${isSelected 
-                    ? 'border-blue-600 shadow-lg shadow-blue-600/20 bg-blue-50/30' 
-                    : 'border-slate-200 hover:border-blue-300 hover:shadow-md'
+                    ? 'border-yellow-500 shadow-xl shadow-yellow-500/20 bg-yellow-50/30' 
+                    : 'border-slate-100 hover:border-yellow-400 hover:shadow-xl hover:-translate-y-1'
                   }
                 `}
               >
                 {/* Checkbox indicator */}
                 <div className={`
-                  absolute top-4 right-4 w-6 h-6 rounded-full border-2 flex items-center justify-center transition-colors z-10
-                  ${isSelected ? 'bg-blue-600 border-blue-600 text-white' : 'border-slate-300 bg-white/80'}
+                  absolute top-2 right-2 sm:top-4 sm:right-4 w-6 h-6 sm:w-8 sm:h-8 rounded-full border-2 flex items-center justify-center transition-all z-20 shadow-sm
+                  ${isSelected ? 'bg-yellow-500 border-yellow-500 text-white scale-110' : 'border-white/80 bg-black/20 backdrop-blur-sm text-transparent group-hover:border-yellow-400 group-hover:bg-white/50'}
                 `}>
-                  {isSelected && <CheckCircle2 size={16} />}
+                  <CheckCircle2 className={`w-4 h-4 sm:w-5 sm:h-5 ${isSelected ? "opacity-100" : "opacity-0 group-hover:opacity-50 text-yellow-500"}`} />
+                </div>
+
+                {/* Order Number Badge */}
+                <div className="absolute top-2 left-2 sm:top-4 sm:left-4 w-7 h-7 sm:w-9 sm:h-9 rounded-full bg-black/50 backdrop-blur-md text-white flex items-center justify-center font-bold text-sm sm:text-base shadow-sm z-20 border border-white/20">
+                  {candidate.order_number}
                 </div>
 
                 {/* Candidate Photo Header */}
-                <div className="h-40 bg-slate-100 relative">
+                <div className="w-full aspect-[3/4] sm:aspect-[4/5] bg-slate-100 relative overflow-hidden">
                   {candidate.photo_url ? (
-                    <img src={candidate.photo_url} alt={candidate.name} className="w-full h-full object-cover" />
+                    <img src={candidate.photo_url} alt={candidate.name} className="w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-105" />
                   ) : (
-                    <div className="w-full h-full flex flex-col items-center justify-center text-slate-400">
-                      <ImageIcon size={40} className="mb-2 opacity-50" />
-                      <span className="text-sm">Tidak ada foto</span>
+                    <div className="w-full h-full flex flex-col items-center justify-center text-slate-400 bg-slate-100">
+                      <ImageIcon size={32} className="mb-2 sm:mb-3 opacity-20 sm:w-12 sm:h-12" />
+                      <span className="text-xs sm:text-sm font-medium">Tanpa Foto</span>
                     </div>
                   )}
-                  {/* Order Number Badge */}
-                  <div className="absolute top-4 left-4 w-8 h-8 rounded-full bg-slate-900/70 backdrop-blur text-white flex items-center justify-center font-bold text-sm shadow-sm">
-                    {candidate.order_number}
-                  </div>
+                  {/* Gradient overlay at bottom of image for a more premium look */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/0 to-black/0 opacity-60 group-hover:opacity-40 transition-opacity"></div>
                 </div>
 
-                <div className="p-5 relative">
-                  <h3 className="font-bold text-lg text-slate-800 mb-2 pr-8">{candidate.name}</h3>
-                  <div className="flex items-center gap-2 text-sm text-slate-600 bg-slate-100 px-3 py-1.5 rounded-lg w-fit">
-                    <Building size={14} className="text-slate-400" />
-                    <span>{candidate.asal_pimpinan}</span>
+                <div className="p-3 sm:p-5 flex-grow flex flex-col justify-between bg-white relative z-10 -mt-4 sm:-mt-6 rounded-t-2xl sm:rounded-t-3xl pt-4 sm:pt-6">
+                  <div>
+                    <h3 className={`font-bold text-sm sm:text-lg mb-1 sm:mb-1.5 leading-tight transition-colors ${isSelected ? 'text-yellow-700' : 'text-slate-900 group-hover:text-yellow-600'}`}>{candidate.name}</h3>
+                    <div className="flex items-start sm:items-center gap-1 sm:gap-1.5 text-xs sm:text-sm font-medium text-slate-500">
+                      <Building size={12} className="text-slate-400 flex-shrink-0 mt-0.5 sm:mt-0 sm:w-3.5 sm:h-3.5" />
+                      <span className="line-clamp-2 sm:truncate leading-tight">{candidate.asal_pimpinan}</span>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -157,7 +162,7 @@ export default function VotePage() {
                 <CheckCircle2 size={18} /> Pemilihan selesai, siap dikirim!
               </span>
             ) : (
-              <span>Anda masih perlu memilih <strong className="text-blue-600">{9 - selectedIds.length}</strong> kandidat lagi.</span>
+              <span>Anda masih perlu memilih <strong className="text-yellow-600">{9 - selectedIds.length}</strong> kandidat lagi.</span>
             )}
           </div>
           
@@ -167,7 +172,7 @@ export default function VotePage() {
             className={`
               w-full sm:w-auto px-8 py-3 rounded-xl font-bold flex items-center justify-center gap-2 transition-all
               ${selectedIds.length === 9 
-                ? 'bg-blue-600 hover:bg-blue-700 text-white shadow-lg shadow-blue-600/30 transform hover:-translate-y-0.5' 
+                ? 'bg-yellow-500 hover:bg-yellow-600 text-white shadow-lg shadow-yellow-500/30 transform hover:-translate-y-0.5' 
                 : 'bg-slate-100 text-slate-400 cursor-not-allowed'
               }
             `}

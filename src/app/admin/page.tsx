@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { getPublishResultStatus, togglePublishResultStatus } from "@/app/actions/settings";
+import { getPublishResultStatus, togglePublishResultStatus, resetElection } from "@/app/actions/settings";
 import { Users, UserCheck, Inbox, Eye, EyeOff } from "lucide-react";
 import { createClient } from "@/utils/supabase/client";
 import BarChart from "@/components/charts/BarChart";
@@ -87,6 +87,21 @@ export default function AdminDashboard() {
     }
   };
 
+  const handleResetElection = async () => {
+    if (!confirm("PERINGATAN: Aksi ini akan menghapus semua suara yang telah masuk dan mereset status pemilih. Apakah Anda yakin?")) return;
+    
+    setToggling(true);
+    const res = await resetElection();
+    setToggling(false);
+    
+    if (res.error) {
+      alert(res.error);
+    } else {
+      alert("Pemilihan berhasil di-reset!");
+      window.location.reload();
+    }
+  };
+
   const barChartCategories = leaderboard.slice(0, 9).map(c => c.name);
   const barChartData = leaderboard.slice(0, 9).map(c => c.votes);
   
@@ -112,6 +127,13 @@ export default function AdminDashboard() {
             ) : (
               <><EyeOff size={16} /> Sembunyikan (Klik Publikasi)</>
             )}
+          </button>
+          <button 
+            onClick={handleResetElection}
+            disabled={toggling}
+            className="px-4 py-2 bg-red-100 hover:bg-red-200 text-red-700 border border-red-300 rounded-lg text-sm font-bold transition-all shadow-sm disabled:opacity-70"
+          >
+            Reset Pemilihan
           </button>
           <a href="/admin/candidates" className="px-4 py-2 bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 rounded-lg text-sm font-medium transition-colors shadow-sm">
             + Tambah Kandidat

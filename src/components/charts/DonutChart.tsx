@@ -38,24 +38,6 @@ export default function DonutChart({ voted, notVoted }: DonutChartProps) {
     dataLabels: {
       enabled: false,
     },
-    responsive: [
-      {
-        breakpoint: 2600,
-        options: {
-          chart: {
-            width: 380,
-          },
-        },
-      },
-      {
-        breakpoint: 640,
-        options: {
-          chart: {
-            width: 200,
-          },
-        },
-      },
-    ],
   };
 
   const series = [voted, notVoted];
@@ -80,24 +62,21 @@ export default function DonutChart({ voted, notVoted }: DonutChartProps) {
         </div>
       </div>
 
-      <div className="-mx-8 flex items-center justify-center gap-y-3">
-        <div className="w-full px-8">
-          <div className="flex w-full items-center">
-            <span className="mr-2 block h-3 w-full max-w-3 rounded-full bg-emerald-500"></span>
-            <p className="flex w-full justify-between text-sm font-medium text-slate-600">
-              <span> Sudah Memilih </span>
-              <span> {votedPercent}% </span>
-            </p>
+      <div className="mt-4 flex flex-col gap-3">
+        <div className="flex items-center justify-between px-2">
+          <div className="flex items-center gap-3">
+            <span className="block h-3 w-3 rounded-full bg-emerald-500"></span>
+            <span className="text-sm font-medium text-slate-600">Sudah Memilih</span>
           </div>
+          <span className="text-sm font-bold text-slate-800">{votedPercent}%</span>
         </div>
-        <div className="w-full px-8">
-          <div className="flex w-full items-center">
-            <span className="mr-2 block h-3 w-full max-w-3 rounded-full bg-slate-500"></span>
-            <p className="flex w-full justify-between text-sm font-medium text-slate-600">
-              <span> Belum Memilih </span>
-              <span> {100 - votedPercent}% </span>
-            </p>
+        
+        <div className="flex items-center justify-between px-2">
+          <div className="flex items-center gap-3">
+            <span className="block h-3 w-3 rounded-full bg-slate-500"></span>
+            <span className="text-sm font-medium text-slate-600">Belum Memilih</span>
           </div>
+          <span className="text-sm font-bold text-slate-800">{100 - votedPercent}%</span>
         </div>
       </div>
     </div>

@@ -40,17 +40,18 @@ export default function ResultPage() {
 
       // 2. Fetch results if published
       const supabase = createClient();
-      
+
       const { count: totalVoters } = await supabase.from("voters").select("*", { count: "exact", head: true });
-      const { count: votedVoters } = await supabase.from("voters").select("*", { count: "exact", head: true }).eq("is_voted", true);
+      const { data: votesDataForCount } = await supabase.from("votes").select("voter_id");
+      const votedVoters = new Set(votesDataForCount?.map(v => v.voter_id)).size;
       const { count: totalCandidates } = await supabase.from("candidates").select("*", { count: "exact", head: true });
-      
+
       setStats({
         totalVoters: totalVoters || 0,
         votedVoters: votedVoters || 0,
         totalCandidates: totalCandidates || 0,
       });
-      
+
       const { data: candidates } = await supabase.from("candidates").select("id, name, order_number, photo_url");
       const { data: votes } = await supabase.from("votes").select("candidate_id");
 
@@ -74,12 +75,12 @@ export default function ResultPage() {
 
         setLeaderboard(board);
       }
-      
+
       setLoading(false);
     }
 
     fetchData();
-    
+
     // Auto refresh every 10 seconds if published
     const interval = setInterval(fetchData, 10000);
     return () => clearInterval(interval);
@@ -144,20 +145,12 @@ export default function ResultPage() {
 
       <main className="max-w-7xl mx-auto px-6 pt-10">
         <div className="mb-10 text-center animate-in fade-in slide-in-from-bottom-4 duration-700">
-          <div className="inline-flex items-center justify-center gap-2 bg-emerald-100 text-emerald-700 px-4 py-2 rounded-full font-bold text-sm mb-4">
-            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-            HASIL RESMI DIPUBLIKASIKAN
-          </div>
-          <h1 className="text-4xl md:text-5xl font-extrabold text-slate-900 tracking-tight">
-            Klasemen Akhir Formatur
+          <h1 className="text-4xl md:text-5xl font-extrabold text-slate-900 tracking-tight mt-6">
+            9 Formatur Terpilih
           </h1>
         </div>
 
-        {/* TOP 9 LEADERBOARD CARDS */}
         <div className="mb-12">
-          <h2 className="text-2xl font-bold text-slate-800 mb-6 flex items-center gap-2">
-            <Trophy className="text-yellow-500" /> Top 9 Teratas
-          </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {leaderboard.slice(0, 9).map((l, index) => (
               <div key={l.candidateId} className="bg-white rounded-2xl p-6 border-2 border-slate-100 shadow-sm flex items-center gap-6 relative overflow-hidden group hover:border-blue-200 transition-colors">
@@ -180,26 +173,22 @@ export default function ResultPage() {
         </div>
 
         {/* CHARTS */}
-        <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 mb-12">
-          <div className="xl:col-span-2 bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
-            <h3 className="font-bold text-lg text-slate-800 mb-4">Grafik 9 Formatur Teratas</h3>
-            <div className="h-96">
-              <BarChart categories={barChartCategories} data={barChartData} />
-            </div>
-          </div>
+        <div className="grid grid-cols-12 gap-6 mb-12">
+          <BarChart categories={barChartCategories} data={barChartData} />
           
-          <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
-            <h3 className="font-bold text-lg text-slate-800 mb-4">Statistik Partisipasi</h3>
-            <div className="h-80">
+          <div className="col-span-12 xl:col-span-4 flex flex-col gap-6">
+            <div className="flex-1 [&>div]:h-full [&>div]:xl:col-span-12 [&>div]:col-span-12">
               <DonutChart voted={stats.votedVoters} notVoted={notVoted} />
             </div>
-            <div className="mt-6 flex justify-between text-center border-t border-slate-100 pt-6">
-              <div>
-                <p className="text-sm text-slate-500 font-medium">Total Pemilih</p>
+            
+            <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex justify-between items-center text-center">
+              <div className="flex-1">
+                <p className="text-sm text-slate-500 font-medium mb-1">Total Pemilih</p>
                 <p className="text-2xl font-bold text-slate-800">{stats.totalVoters}</p>
               </div>
-              <div>
-                <p className="text-sm text-slate-500 font-medium">Suara Masuk</p>
+              <div className="w-px h-12 bg-slate-200 mx-4"></div>
+              <div className="flex-1">
+                <p className="text-sm text-slate-500 font-medium mb-1">Suara Masuk</p>
                 <p className="text-2xl font-bold text-emerald-600">{stats.votedVoters}</p>
               </div>
             </div>

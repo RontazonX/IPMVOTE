@@ -44,3 +44,19 @@ export async function togglePublishResultStatus() {
   
   return { success: true, status: newStatus };
 }
+
+export async function resetElection() {
+  const supabase = await createClient();
+  
+  // Hapus semua suara
+  const { error: errorVotes } = await supabase.from("votes").delete().not("voter_id", "is", null);
+  if (errorVotes) return { error: errorVotes.message };
+
+  // Reset status pemilih
+  const { error: errorVoters } = await supabase.from("voters").update({ is_voted: false }).not("id", "is", null);
+  if (errorVoters) return { error: errorVoters.message };
+
+  revalidatePath("/admin");
+  revalidatePath("/result");
+  return { success: true };
+}

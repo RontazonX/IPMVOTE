@@ -1,21 +1,21 @@
 import Link from "next/link";
-import { ArrowRight, CheckCircle2, QrCode, ShieldCheck, Users, Building, Image as ImageIcon } from "lucide-react";
+import { ArrowRight, CheckCircle2, QrCode, ShieldCheck, Users } from "lucide-react";
 import { createClient } from "@/utils/supabase/server";
 
 export const runtime = 'edge';
 
 export default async function LandingPage() {
-  let candidates = null;
+
   let errorMessage = null;
-  let envInfo = { url: !!process.env.NEXT_PUBLIC_SUPABASE_URL, key: !!process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY };
+  const envInfo = { url: !!process.env.NEXT_PUBLIC_SUPABASE_URL, key: !!process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY };
 
   try {
     const supabase = await createClient();
     const { data, error } = await supabase.from("candidates").select("*").order("order_number", { ascending: true });
     if (error) throw error;
-    candidates = data;
-  } catch (err: any) {
-    errorMessage = err.message || err.toString();
+    // candidates are selected to test connection but currently not used in landing view
+  } catch (err: unknown) {
+    errorMessage = err instanceof Error ? err.message : String(err);
   }
 
   if (errorMessage) {
@@ -31,23 +31,23 @@ export default async function LandingPage() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-800 font-sans selection:bg-blue-200">
+    <div className="min-h-screen bg-slate-50 text-slate-800 font-sans selection:bg-yellow-200">
       {/* Navbar */}
       <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-slate-200">
         <div className="max-w-6xl mx-auto px-6 h-20 flex items-center justify-between">
           <div className="font-bold text-2xl tracking-tight text-slate-800">
-            IPM<span className="text-blue-600">Vote</span>
+            IPM<span className="text-yellow-600">Vote</span>
           </div>
           <nav className="hidden md:flex items-center gap-8 font-medium text-slate-600">
-            <a href="#home" className="hover:text-blue-600 transition-colors">Beranda</a>
-            <Link href="/formatur" className="hover:text-blue-600 transition-colors">Formatur</Link>
-            <a href="#cara-voting" className="hover:text-blue-600 transition-colors">Cara Voting</a>
-            <a href="#about" className="hover:text-blue-600 transition-colors">Tentang</a>
-            <Link href="/result" className="hover:text-blue-600 transition-colors">Result</Link>
+            <a href="#home" className="hover:text-yellow-600 transition-colors">Beranda</a>
+            <Link href="/formatur" className="hover:text-yellow-600 transition-colors">Formatur</Link>
+            <a href="#cara-voting" className="hover:text-yellow-600 transition-colors">Cara Voting</a>
+            <a href="#about" className="hover:text-yellow-600 transition-colors">Tentang</a>
+            <Link href="/result" className="hover:text-yellow-600 transition-colors">Result</Link>
           </nav>
-          <Link 
-            href="/login" 
-            className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2.5 rounded-full font-semibold transition-all transform hover:-translate-y-0.5 shadow-md shadow-blue-600/20"
+          <Link
+            href="/login"
+            className="bg-yellow-600 hover:bg-yellow-700 text-white px-6 py-2.5 rounded-full font-semibold transition-all transform hover:-translate-y-0.5 shadow-md shadow-yellow-600/20"
           >
             Mulai Voting
           </Link>
@@ -57,26 +57,19 @@ export default async function LandingPage() {
       <main>
         {/* Hero Section */}
         <section id="home" className="relative pt-20 pb-32 overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-br from-blue-50 to-white -z-10"></div>
+          <div className="absolute inset-0 bg-gradient-to-br from-yellow-50 to-white -z-10"></div>
           <div className="max-w-6xl mx-auto px-6 text-center">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-100 text-blue-700 font-medium text-sm mb-8 animate-bounce-slow">
-              <span className="relative flex h-2.5 w-2.5">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-blue-500"></span>
-              </span>
-              Pemilihan Formatur Sedang Berlangsung
-            </div>
             <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight text-slate-900 mb-6 leading-tight">
-              Tentukan Masa Depan <br className="hidden md:block"/> 
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600">IPM Wirobrajan</span>
+              Tentukan Masa Depan <br className="hidden md:block" />
+              <span className="text-yellow-600">IPM Wirobrajan</span>
             </h1>
             <p className="text-lg md:text-xl text-slate-600 max-w-2xl mx-auto mb-10 leading-relaxed">
               Gunakan hak suara Anda dengan mudah, aman, dan rahasia melalui platform e-voting resmi Pimpinan Cabang Ikatan Pelajar Muhammadiyah Wirobrajan.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-              <Link 
-                href="/login" 
-                className="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white text-lg px-8 py-4 rounded-full font-bold transition-all transform hover:-translate-y-1 shadow-xl shadow-blue-600/30 flex items-center justify-center gap-2"
+              <Link
+                href="/login"
+                className="w-full sm:w-auto bg-yellow-600 hover:bg-yellow-700 text-white text-lg px-8 py-4 rounded-full font-bold transition-all transform hover:-translate-y-1 shadow-xl shadow-yellow-600/30 flex items-center justify-center gap-2"
               >
                 Masuk ke Bilik Suara <ArrowRight size={20} />
               </Link>
@@ -93,15 +86,15 @@ export default async function LandingPage() {
             </div>
 
             <div className="grid md:grid-cols-3 gap-8">
-              <div className="bg-white p-8 rounded-2xl border border-slate-100 text-center hover:shadow-lg hover:border-blue-100 transition-all">
-                <div className="w-16 h-16 bg-blue-100 text-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-6 rotate-3">
+              <div className="bg-white p-8 rounded-2xl border border-slate-100 text-center hover:shadow-lg hover:border-yellow-100 transition-all">
+                <div className="w-16 h-16 bg-yellow-100 text-yellow-600 rounded-2xl flex items-center justify-center mx-auto mb-6 rotate-3">
                   <QrCode size={32} />
                 </div>
                 <h3 className="text-xl font-bold mb-3">1. Scan QR Code</h3>
                 <p className="text-slate-600">Dapatkan QR Code atau Token dari panitia, lalu scan menggunakan kamera HP Anda di halaman login.</p>
               </div>
 
-              <div className="bg-white p-8 rounded-2xl border border-slate-100 text-center hover:shadow-lg hover:border-blue-100 transition-all">
+              <div className="bg-white p-8 rounded-2xl border border-slate-100 text-center hover:shadow-lg hover:border-yellow-100 transition-all">
                 <div className="w-16 h-16 bg-indigo-100 text-indigo-600 rounded-2xl flex items-center justify-center mx-auto mb-6 -rotate-3">
                   <Users size={32} />
                 </div>
@@ -109,7 +102,7 @@ export default async function LandingPage() {
                 <p className="text-slate-600">Pilih tepat 9 (sembilan) kandidat formatur terbaik menurut Anda dari daftar yang tersedia.</p>
               </div>
 
-              <div className="bg-white p-8 rounded-2xl border border-slate-100 text-center hover:shadow-lg hover:border-blue-100 transition-all">
+              <div className="bg-white p-8 rounded-2xl border border-slate-100 text-center hover:shadow-lg hover:border-yellow-100 transition-all">
                 <div className="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-2xl flex items-center justify-center mx-auto mb-6 rotate-3">
                   <ShieldCheck size={32} />
                 </div>
@@ -125,7 +118,7 @@ export default async function LandingPage() {
           <div className="max-w-4xl mx-auto px-6 text-center">
             <h2 className="text-3xl font-bold text-slate-900 mb-6">Tentang E-Voting Formatur</h2>
             <p className="text-lg text-slate-600 leading-relaxed mb-8">
-              Aplikasi ini dikembangkan khusus untuk memfasilitasi proses demokrasi pelajar Muhammadiyah di cabang Wirobrajan. 
+              Aplikasi ini dikembangkan khusus untuk memfasilitasi proses demokrasi pelajar Muhammadiyah di cabang Wirobrajan.
               Menggunakan teknologi modern Next.js dan Supabase, kami menjamin transparansi, kecepatan perhitungan, dan kerahasiaan pilihan setiap peserta musyawarah.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-6">

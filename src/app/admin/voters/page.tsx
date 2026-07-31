@@ -1,10 +1,10 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Plus, Trash2, KeyRound, QrCode, X } from "lucide-react";
+import { Plus, Trash2, QrCode, X } from "lucide-react";
 import { QRCodeSVG } from "qrcode.react";
 import { createClient } from "@/utils/supabase/client";
-import { addVoter, deleteVoter, addMultipleVoters } from "@/app/actions/voters";
+import { addVoter, deleteVoter, addMultipleVoters, deleteAllVoters } from "@/app/actions/voters";
 
 type Voter = {
   id: string;
@@ -24,16 +24,31 @@ export default function AdminVoters() {
   const [showBulkModal, setShowBulkModal] = useState(false);
   const [bulkCount, setBulkCount] = useState("10");
 
-  async function fetchVoters() {
-    setLoading(true);
+  async function fetchVoters(showLoader = true) {
+    if (showLoader) setLoading(true);
     const supabase = createClient();
-    const { data } = await supabase.from("voters").select("*").order("created_at", { ascending: false });
-    if (data) setVoters(data);
+    
+    // Ambil data pemilih
+    const { data: votersData } = await supabase.from("voters").select("*").order("created_at", { ascending: false });
+    
+    // Ambil data suara untuk cross-check is_voted (karena update is_voted via RLS gagal)
+    const { data: votesData } = await supabase.from("votes").select("voter_id");
+    
+    if (votersData) {
+      const votedIds = new Set(votesData?.map(v => v.voter_id) || []);
+      
+      const updatedVoters = votersData.map(voter => ({
+        ...voter,
+        is_voted: voter.is_voted || votedIds.has(voter.id)
+      }));
+      
+      setVoters(updatedVoters);
+    }
     setLoading(false);
   }
 
   useEffect(() => {
-    fetchVoters();
+    fetchVoters(false);
   }, []);
 
   const handleAddRandom = async () => {
@@ -98,6 +113,19 @@ export default function AdminVoters() {
     if (res.error) {
       alert(res.error);
     } else {
+      fetchVoters();
+    }
+  };
+
+  const handleDeleteAll = async () => {
+    if (!confirm("PERINGATAN: Aksi ini akan menghapus semua pemilih dan QR Code mereka secara permanen! Apakah Anda yakin?")) return;
+    setSubmitting(true);
+    const res = await deleteAllVoters();
+    setSubmitting(false);
+    if (res.error) {
+      alert(res.error);
+    } else {
+      alert("Semua data pemilih berhasil dihapus!");
       fetchVoters();
     }
   };
@@ -227,6 +255,14 @@ export default function AdminVoters() {
             className="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg font-medium flex items-center gap-2 transition-colors shadow-sm disabled:opacity-70"
           >
             + Generate Banyak
+          </button>
+          <button 
+            onClick={handleDeleteAll}
+            disabled={submitting}
+            className="bg-red-100 text-red-700 hover:bg-red-200 border border-red-300 px-4 py-2 rounded-lg font-medium flex items-center gap-2 transition-colors shadow-sm disabled:opacity-70"
+          >
+            <Trash2 size={18} />
+            Hapus Semua
           </button>
         </div>
       </div>

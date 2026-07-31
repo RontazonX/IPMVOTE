@@ -19,7 +19,6 @@ export default function AdminCandidates() {
   const [submitting, setSubmitting] = useState(false);
 
   async function fetchCandidates() {
-    setLoading(true);
     const { data } = await getCandidates();
     if (data) setCandidates(data);
     setLoading(false);

@@ -33,7 +33,7 @@ export default function Login() {
           setIsScanning(false);
           if (scanner) scanner.clear();
         },
-        (err) => {
+        () => {
           // Ignore
         }
       );
@@ -61,7 +61,7 @@ export default function Login() {
       } else {
         router.push("/vote");
       }
-    } catch (err) {
+    } catch {
       setError("Terjadi kesalahan jaringan.");
       setLoading(false);
     }
@@ -74,6 +74,7 @@ export default function Login() {
       }, 500);
       return () => clearTimeout(t);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [token, isScanning]);
 
   return (

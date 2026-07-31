@@ -51,7 +51,21 @@ export async function deleteVoter(id: string) {
   const supabase = await createClient();
   const { error } = await supabase.from("voters").delete().eq("id", id);
   if (error) return { error: error.message };
+  revalidatePath("/admin/voters");
+  return { success: true };
+}
+
+export async function deleteAllVoters() {
+  const supabase = await createClient();
+  
+  // Hapus semua suara terkait terlebih dahulu (jika tidak ada cascade delete)
+  await supabase.from("votes").delete().not("voter_id", "is", null);
+  
+  // Hapus semua pemilih
+  const { error } = await supabase.from("voters").delete().not("id", "is", null);
+  if (error) return { error: error.message };
   
   revalidatePath("/admin/voters");
+  revalidatePath("/admin");
   return { success: true };
 }

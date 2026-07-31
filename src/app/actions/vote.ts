@@ -16,14 +16,14 @@ export async function submitVote(candidateIds: string[]) {
 
   const supabase = await createClient();
 
-  // Pastikan user belum memilih (double check di server)
-  const { data: voterCheck, error: checkError } = await supabase
-    .from("voters")
-    .select("is_voted")
-    .eq("id", voterId)
-    .single();
+  // Pastikan user belum memilih (double check di server) dengan mengecek tabel votes
+  const { data: existingVotes, error: checkError } = await supabase
+    .from("votes")
+    .select("id")
+    .eq("voter_id", voterId)
+    .limit(1);
 
-  if (checkError || !voterCheck || voterCheck.is_voted) {
+  if (checkError || (existingVotes && existingVotes.length > 0)) {
     return { error: "Akses ditolak. Anda sudah memberikan suara sebelumnya." };
   }
 
