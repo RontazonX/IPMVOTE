@@ -11,9 +11,14 @@ type Voter = {
   is_voted: boolean;
 };
 
+import { usePathname } from "next/navigation";
+
 export default function PrintVoters() {
   const [voters, setVoters] = useState<Voter[]>([]);
   const [loading, setLoading] = useState(true);
+  
+  const pathname = usePathname();
+  const basePath = pathname.match(/^\/admin-[^\/]+/)?.[0] || '/admin';
 
   useEffect(() => {
     async function fetchVoters() {
@@ -37,7 +42,7 @@ export default function PrintVoters() {
       <div className="print:hidden mb-8 flex justify-between items-center bg-slate-100 p-4 rounded-lg">
         <p className="font-medium text-slate-600">Tekan tombol di bawah atau CTRL+P untuk mencetak Token & QR Code.</p>
         <div className="space-x-4">
-          <a href="/admin/voters" className="px-4 py-2 bg-white border border-slate-300 rounded hover:bg-slate-50">Kembali</a>
+          <a href={`${basePath}/voters`} className="px-4 py-2 bg-white border border-slate-300 rounded hover:bg-slate-50">Kembali</a>
           <button onClick={() => window.print()} className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">Cetak Sekarang</button>
         </div>
       </div>

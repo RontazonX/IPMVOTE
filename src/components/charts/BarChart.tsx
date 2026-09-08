@@ -14,7 +14,7 @@ interface BarChartProps {
 
 export default function BarChart({ categories, data }: BarChartProps) {
   const options: ApexOptions = {
-    colors: ["#3C50E0"],
+    colors: ["#F59E0B"],
     chart: {
       fontFamily: "inherit",
       type: "bar",

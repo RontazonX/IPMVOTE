@@ -79,29 +79,27 @@ export default function Login() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-slate-50 p-4 relative overflow-hidden">
-      <Link href="/" className="absolute top-6 left-6 flex items-center gap-2 text-slate-500 hover:text-blue-600 transition-colors z-20 bg-white/80 backdrop-blur px-4 py-2 rounded-full shadow-sm">
+      <Link href="/" className="absolute top-6 left-6 flex items-center gap-2 text-slate-500 hover:text-amber-600 transition-colors z-20 bg-white px-4 py-2 rounded-full border border-slate-200">
         <Home size={18} /> Kembali ke Beranda
       </Link>
 
-      <div className="absolute top-0 left-0 w-full h-96 bg-blue-600 rounded-b-[100px] md:rounded-b-[200px] opacity-10"></div>
-      
       <div className="relative w-full max-w-md">
         <div className="text-center mb-10">
-          <h1 className="text-4xl font-bold text-slate-800 tracking-tight mb-2">E-Voting <span className="text-blue-600">Formatur</span></h1>
-          <p className="text-slate-500">Pimpinan Cabang IPM Wirobrajan</p>
+          <h1 className="text-4xl font-bold text-slate-900 tracking-tight mb-2">E-Voting <span className="text-amber-500">Formatur</span></h1>
+          <p className="text-slate-500">Autentikasi Pemilih IPMVote</p>
         </div>
 
-        <div className="bg-white p-8 rounded-2xl shadow-xl shadow-slate-200/50 border border-slate-100">
+        <div className="bg-white p-8 rounded-2xl border border-slate-200 shadow-sm">
           <div className="mb-6 flex justify-center">
-            <div className="w-16 h-16 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center rotate-3">
+            <div className="w-16 h-16 bg-amber-50 text-amber-500 border border-amber-100 rounded-2xl flex items-center justify-center rotate-3">
               <KeyRound size={32} />
             </div>
           </div>
 
-          <h2 className="text-xl font-bold text-slate-800 text-center mb-6">Autentikasi Pemilih</h2>
+          <h2 className="text-xl font-bold text-slate-900 text-center mb-6">Verifikasi Identitas</h2>
           
           {error && (
-            <div className="mb-4 p-3 bg-red-50 text-red-600 text-sm rounded-lg border border-red-100 text-center font-medium">
+            <div className="mb-4 p-3 bg-red-50 text-red-600 text-sm rounded-lg border border-red-200 text-center font-medium">
               {error}
             </div>
           )}
@@ -124,14 +122,14 @@ export default function Login() {
                   value={token}
                   onChange={(e) => setToken(e.target.value.toUpperCase())}
                   placeholder="Masukkan Token Manual"
-                  className="w-full text-center text-lg tracking-widest font-mono bg-slate-50 border border-slate-200 text-slate-800 rounded-xl px-4 py-4 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent transition-all placeholder:text-slate-300"
+                  className="w-full text-center text-lg tracking-widest font-mono bg-white border-2 border-slate-200 text-slate-900 rounded-xl px-4 py-4 focus:outline-none focus:border-amber-500 transition-colors placeholder:text-slate-300"
                   required
                 />
               </div>
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-xl px-4 py-4 flex items-center justify-center gap-2 transition-all transform hover:-translate-y-0.5 shadow-lg shadow-blue-600/30 disabled:opacity-70 disabled:transform-none"
+                className="w-full bg-amber-500 hover:bg-amber-600 text-white font-medium rounded-xl px-4 py-4 flex items-center justify-center gap-2 transition-all transform hover:-translate-y-0.5 disabled:opacity-70 disabled:transform-none"
               >
                 {loading ? "Memverifikasi..." : "Masuk & Mulai Memilih"}
                 {!loading && <ArrowRight size={20} />}

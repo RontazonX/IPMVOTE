@@ -13,6 +13,8 @@ type Voter = {
   is_voted: boolean;
 };
 
+import { usePathname } from "next/navigation";
+
 export default function AdminVoters() {
   const [voters, setVoters] = useState<Voter[]>([]);
   const [loading, setLoading] = useState(true);
@@ -23,6 +25,9 @@ export default function AdminVoters() {
 
   const [showBulkModal, setShowBulkModal] = useState(false);
   const [bulkCount, setBulkCount] = useState("10");
+
+  const pathname = usePathname();
+  const basePath = pathname.match(/^\/admin-[^\/]+/)?.[0] || '/admin';
 
   async function fetchVoters(showLoader = true) {
     if (showLoader) setLoading(true);
@@ -229,7 +234,7 @@ export default function AdminVoters() {
         </div>
         <div className="flex flex-wrap items-center gap-3">
           <a 
-            href="/admin/voters/print"
+            href={`${basePath}/voters/print`}
             target="_blank"
             className="bg-slate-800 hover:bg-slate-900 text-white px-4 py-2 rounded-lg font-medium transition-colors shadow-sm"
           >

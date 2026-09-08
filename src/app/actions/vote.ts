@@ -2,25 +2,25 @@
 
 import { createClient } from "@/utils/supabase/server";
 import { cookies } from "next/headers";
-import { checkSession } from "./auth";
+import { getVoterSession } from "@/utils/session";
 
 export async function submitVote(candidateIds: string[]) {
   if (candidateIds.length !== 9) {
     return { error: "Anda harus memilih tepat 9 formatur." };
   }
 
-  const voterId = await checkSession();
-  if (!voterId) {
+  const session = await getVoterSession();
+  if (!session) {
     return { error: "Sesi tidak valid atau telah berakhir. Silakan login kembali." };
   }
 
   const supabase = await createClient();
 
-  // Pastikan user belum memilih (double check di server) dengan mengecek tabel votes
+  // Pastikan user belum memilih (double check di server)
   const { data: existingVotes, error: checkError } = await supabase
     .from("votes")
     .select("id")
-    .eq("voter_id", voterId)
+    .eq("voter_id", session.id)
     .limit(1);
 
   if (checkError || (existingVotes && existingVotes.length > 0)) {
@@ -29,7 +29,8 @@ export async function submitVote(candidateIds: string[]) {
 
   // Masukkan suara
   const votesData = candidateIds.map(candidate_id => ({
-    voter_id: voterId,
+    election_id: session.election_id,
+    voter_id: session.id,
     candidate_id
   }));
 
@@ -45,12 +46,10 @@ export async function submitVote(candidateIds: string[]) {
   const { error: updateError } = await supabase
     .from("voters")
     .update({ is_voted: true })
-    .eq("id", voterId);
+    .eq("id", session.id);
 
   if (updateError) {
-    // Ideally we should use transactions, but Supabase standard JS client 
-    // doesn't support transactions without RPC. Since it's a simple app, we just log it.
-    console.error("Gagal update is_voted untuk:", voterId);
+    console.error("Gagal update is_voted untuk:", session.id);
   }
 
   // Hapus session

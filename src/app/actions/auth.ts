@@ -12,7 +12,7 @@ export async function loginWithToken(token: string) {
   // Cari token di tabel voters
   const { data, error } = await supabase
     .from("voters")
-    .select("id, is_voted, name")
+    .select("id, is_voted, name, election_id")
     .eq("token", token)
     .single();
 
@@ -24,9 +24,14 @@ export async function loginWithToken(token: string) {
     return { error: "Token ini sudah digunakan untuk memilih." };
   }
 
-  // Set cookie session (simpan voter_id)
+  const sessionData = {
+    id: data.id,
+    election_id: data.election_id
+  };
+
+  // Set cookie session (simpan JSON string)
   const cookieStore = await cookies();
-  cookieStore.set("voter_session", data.id, {
+  cookieStore.set("voter_session", JSON.stringify(sessionData), {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: "strict",
@@ -39,8 +44,13 @@ export async function loginWithToken(token: string) {
 
 export async function checkSession() {
   const cookieStore = await cookies();
-  const voterId = cookieStore.get("voter_session")?.value;
-  return voterId;
+  const sessionString = cookieStore.get("voter_session")?.value;
+  if (!sessionString) return null;
+  try {
+    return JSON.parse(sessionString);
+  } catch (e) {
+    return null;
+  }
 }
 
 export async function logout() {

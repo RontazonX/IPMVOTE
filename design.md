@@ -1,35 +1,34 @@
-# Design Guidelines - Voting Formatur PC IPM Wirobrajan
+# Design Guidelines - IPMVote
 
 ## Philosophy
-The application should follow a modern, **clean, and interactive** design philosophy.
-We want the user to experience a premium, trustworthy interface, fitting for a formal yet modern organization (IPM).
+The application follows a **Clean, Professional, and Interactive** design philosophy.
+We avoid distracting elements like glassmorphism (no `backdrop-blur` or heavy translucent overlays) and rely on solid colors, ample whitespace, and subtle interactive micro-animations to create a premium, trustworthy interface.
 
 ## Color Palette
-The primary color scheme revolves around White and Blue.
-- **Primary Blue**: `#2563EB` (Tailwind `blue-600`) - Used for primary actions, active states, and emphasis.
-- **Secondary Blue**: `#DBEAFE` (Tailwind `blue-100`) - Used for soft backgrounds, hover states on cards, and subtle highlights.
-- **Dark Text**: `#0F172A` (Tailwind `slate-900`) - Used for headings and primary text to maintain high contrast.
-- **Muted Text**: `#64748B` (Tailwind `slate-500`) - Used for secondary information and captions.
-- **Background**: `#F8FAFC` (Tailwind `slate-50`) - Main application background to make white cards pop.
-- **White**: `#FFFFFF` - Used for content cards, form inputs, and the navigation bar.
+The primary color scheme relies heavily on solid White with warm Yellow/Orange as the secondary/accent color.
+- **Background**: `#FFFFFF` (Tailwind `white`) - The vast majority of the app uses a clean white background to emphasize content.
+- **Surface/Cards**: `#FFFFFF` (Tailwind `white`) - Cards are solid white, distinguished by subtle solid borders (`border-slate-200`) rather than heavy drop shadows or glass effects.
+- **Primary Accent (Yellow/Orange)**: `#F59E0B` (Tailwind `amber-500`) or `#EAB308` (Tailwind `yellow-500`) - Used for primary buttons, active states, and highlights. It gives a warm, energetic, and professional feel.
+- **Dark Text**: `#0F172A` (Tailwind `slate-900`) - Used for headings.
+- **Muted Text**: `#64748B` (Tailwind `slate-500`) - Used for secondary text.
+- **Light Gray**: `#F8FAFC` (Tailwind `slate-50`) or `#F1F5F9` (Tailwind `slate-100`) - Used sparingly for section dividers, alternating rows, or disabled states.
 
 ## Typography
-We will use a modern sans-serif font, preferably **Inter** or **Outfit**, loaded via Google Fonts (Next.js `next/font/google`).
-- **Headings**: Bold (`font-bold`), tight tracking (`tracking-tight`).
-- **Body**: Regular weight, readable line height (`leading-relaxed`).
+Clean sans-serif font (Inter or Outfit).
+- **Headings**: Bold (`font-bold`), crisp, dark.
+- **Body**: Regular weight, highly readable line height.
 
-## UI Components & Interaction (Micro-animations)
-- **Cards**: All candidates will be displayed in crisp white cards with soft shadows (`shadow-sm`, hover: `shadow-md`).
-- **Hover Effects**: 
-  - Buttons will slightly translate up (`-translate-y-0.5`) and change opacity on hover.
-  - Candidate cards will have a subtle scale effect (`hover:scale-[1.02]`) and a blue border highlight when selected.
-- **Transitions**: Use `transition-all duration-200 ease-in-out` for smooth state changes.
-- **Glassmorphism**: Consider subtle glass effects (`backdrop-blur-md bg-white/80`) for sticky headers or notifications.
+## UI Components & Interaction
+- **Cards & Containers**: Solid white background, 1px solid border (`border-slate-200`). NO glassmorphism.
+- **Interactive States**: 
+  - Hovering over buttons or cards triggers subtle translation (`-translate-y-1`) and solid border color changes (e.g., `hover:border-amber-500`).
+  - Active states use solid amber backgrounds.
+- **Shadows**: Kept to an absolute minimum. Use `shadow-sm` or none at all, relying on borders for separation.
+- **Modals/Overlays**: Solid background overlays (`bg-slate-900/40`) with solid white modal boxes. No `backdrop-blur`.
 
-## Admin Panel (TailAdmin Style)
-The admin panel will feature a sidebar navigation and a top header.
-- **Sidebar**: Dark blue or stark white with clear active state indicators (blue background with white text).
-- **Dashboard Widgets**: Clean statistic cards showing total voters, total candidates, and votes cast.
+## Admin Panel
+- **Sidebar**: Solid white background, right border (`border-r border-slate-200`). Active menu items highlighted with a subtle amber background or left-border.
+- **Header**: Solid white, bottom border (`border-b border-slate-200`).
 
 ## Responsiveness
-The design must be fully responsive, utilizing Tailwind's utility classes (`sm:`, `md:`, `lg:`) to ensure perfect display on mobile devices (where most voting might occur) as well as desktop screens (for admin).
+Fully responsive layout utilizing Tailwind's breakpoint utilities.
