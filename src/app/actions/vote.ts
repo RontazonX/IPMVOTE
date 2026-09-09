@@ -5,16 +5,25 @@ import { cookies } from "next/headers";
 import { getVoterSession } from "@/utils/session";
 
 export async function submitVote(candidateIds: string[]) {
-  if (candidateIds.length !== 9) {
-    return { error: "Anda harus memilih tepat 9 formatur." };
-  }
-
   const session = await getVoterSession();
   if (!session) {
     return { error: "Sesi tidak valid atau telah berakhir. Silakan login kembali." };
   }
 
   const supabase = await createClient();
+
+  // Fetch election settings
+  const { data: election } = await supabase
+    .from("elections")
+    .select("max_selected_formaturs")
+    .eq("id", session.election_id)
+    .single();
+
+  const maxSelectedFormaturs = election?.max_selected_formaturs || 9;
+
+  if (candidateIds.length !== maxSelectedFormaturs) {
+    return { error: `Anda harus memilih tepat ${maxSelectedFormaturs} formatur.` };
+  }
 
   // Pastikan user belum memilih (double check di server)
   const { data: existingVotes, error: checkError } = await supabase
@@ -57,4 +66,19 @@ export async function submitVote(candidateIds: string[]) {
   cookieStore.delete("voter_session");
 
   return { success: true };
+}
+
+export async function getVoterElectionSettings() {
+  const session = await getVoterSession();
+  if (!session) return { error: "Unauthorized" };
+
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from("elections")
+    .select("max_selected_formaturs")
+    .eq("id", session.election_id)
+    .single();
+
+  if (error || !data) return { maxSelectedFormaturs: 9 };
+  return { maxSelectedFormaturs: data.max_selected_formaturs || 9 };
 }

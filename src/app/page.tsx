@@ -11,30 +11,28 @@ export default async function LandingPage() {
   const envInfo = { url: !!process.env.NEXT_PUBLIC_SUPABASE_URL, key: !!process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY };
   
   let stats = {
-    electionsCount: 0,
-    totalVoters: 0,
-    votedVoters: 0,
-    totalCandidates: 0
+    rantingCount: 0,
+    cabangCount: 0,
+    daerahCount: 0,
+    wilayahCount: 0
   };
 
   try {
     const supabase = await createClient();
-    // Fetch stats in parallel for performance
-    const [electionsRes, votersRes, votedRes, candidatesRes] = await Promise.all([
-      supabase.from("elections").select("*", { count: "exact", head: true }),
-      supabase.from("voters").select("*", { count: "exact", head: true }),
-      supabase.from("voters").select("*", { count: "exact", head: true }).eq("is_voted", true),
-      supabase.from("candidates").select("*", { count: "exact", head: true })
-    ]);
+    const { data: elections, error: electionsError } = await supabase
+      .from("elections")
+      .select("level");
 
-    if (electionsRes.error) throw electionsRes.error;
+    if (electionsError) throw electionsError;
 
-    stats = {
-      electionsCount: electionsRes.count || 0,
-      totalVoters: votersRes.count || 0,
-      votedVoters: votedRes.count || 0,
-      totalCandidates: candidatesRes.count || 0,
-    };
+    if (elections) {
+      stats = {
+        rantingCount: elections.filter(e => e.level === 'Pimpinan Ranting').length,
+        cabangCount: elections.filter(e => e.level === 'Pimpinan Cabang').length,
+        daerahCount: elections.filter(e => e.level === 'Pimpinan Daerah').length,
+        wilayahCount: elections.filter(e => e.level === 'Pimpinan Wilayah').length,
+      };
+    }
   } catch (err: unknown) {
     errorMessage = err instanceof Error ? err.message : String(err);
   }
@@ -124,27 +122,27 @@ export default async function LandingPage() {
             <div className="grid grid-cols-2 gap-x-8 gap-y-10 sm:grid-cols-4">
               <div className="text-center">
                 <div className="text-4xl font-bold tracking-tight text-amber-600 sm:text-5xl mb-2 flex items-center justify-center">
-                  <CountingNumber target={stats.electionsCount} />
+                  <CountingNumber target={stats.rantingCount} />
                 </div>
-                <p className="text-sm font-medium text-amber-900/70">Cabang/Ranting Terdaftar</p>
+                <p className="text-sm font-medium text-amber-900/70">Pimpinan Ranting</p>
               </div>
               <div className="text-center">
                 <div className="text-4xl font-bold tracking-tight text-amber-600 sm:text-5xl mb-2 flex items-center justify-center">
-                  <CountingNumber target={stats.totalVoters} />
+                  <CountingNumber target={stats.cabangCount} />
                 </div>
-                <p className="text-sm font-medium text-amber-900/70">Total Pemilih DPT</p>
+                <p className="text-sm font-medium text-amber-900/70">Pimpinan Cabang</p>
               </div>
               <div className="text-center">
                 <div className="text-4xl font-bold tracking-tight text-amber-600 sm:text-5xl mb-2 flex items-center justify-center">
-                  <CountingNumber target={stats.votedVoters} />
+                  <CountingNumber target={stats.daerahCount} />
                 </div>
-                <p className="text-sm font-medium text-amber-900/70">Suara Masuk Berhasil</p>
+                <p className="text-sm font-medium text-amber-900/70">Pimpinan Daerah</p>
               </div>
               <div className="text-center">
                 <div className="text-4xl font-bold tracking-tight text-amber-600 sm:text-5xl mb-2 flex items-center justify-center">
-                  <CountingNumber target={stats.totalCandidates} />
+                  <CountingNumber target={stats.wilayahCount} />
                 </div>
-                <p className="text-sm font-medium text-amber-900/70">Kandidat Formatur</p>
+                <p className="text-sm font-medium text-amber-900/70">Pimpinan Wilayah</p>
               </div>
             </div>
           </div>

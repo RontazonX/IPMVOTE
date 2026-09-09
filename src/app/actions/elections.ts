@@ -77,6 +77,18 @@ export async function resetElection() {
   return { success: true };
 }
 
+export async function getVoterElectionInfo(electionId: string) {
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from("elections")
+    .select("name, max_selected_formaturs")
+    .eq("id", electionId)
+    .single();
+    
+  if (error || !data) return null;
+  return data;
+}
+
 // === SUPERADMIN ACTIONS ===
 
 export async function getAllElections() {
@@ -95,7 +107,7 @@ export async function getAllElections() {
   return { elections: data };
 }
 
-export async function createElectionAndAdmin(name: string, slug: string, adminUsername: string, adminPassword: string) {
+export async function createElectionAndAdmin(name: string, slug: string, adminUsername: string, adminPassword: string, level: string = 'Pimpinan Ranting', maxSelectedFormaturs: number = 9) {
   const session = await getAdminSession();
   if (!session || session.role !== 'superadmin') {
     return { error: "Unauthorized" };
@@ -106,7 +118,7 @@ export async function createElectionAndAdmin(name: string, slug: string, adminUs
   // 1. Create Election
   const { data: election, error: electionError } = await supabase
     .from("elections")
-    .insert({ name, slug })
+    .insert({ name, slug, level, max_selected_formaturs: maxSelectedFormaturs })
     .select("id")
     .single();
 

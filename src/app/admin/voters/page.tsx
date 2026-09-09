@@ -143,7 +143,7 @@ export default function AdminVoters() {
           <div className="bg-white p-8 rounded-2xl shadow-2xl text-center transform scale-100 transition-all" onClick={e => e.stopPropagation()}>
             <h3 className="text-xl font-bold text-slate-800 mb-6">Scan QR untuk Memilih</h3>
             <div className="bg-white p-4 rounded-xl border-4 border-blue-600 inline-block mb-4 shadow-lg shadow-blue-600/20">
-              <QRCodeSVG value={showQR} size={250} level="H" includeMargin={true} />
+              <QRCodeSVG value={typeof window !== 'undefined' ? `${window.location.origin}/login?token=${showQR}` : showQR} size={250} level="H" includeMargin={true} />
             </div>
             <p className="text-2xl font-mono font-bold tracking-widest text-blue-600 bg-blue-50 py-2 rounded-lg">{showQR}</p>
             <p className="text-sm text-slate-500 mt-4">Gunakan kamera atau aplikasi scanner pada halaman utama.</p>

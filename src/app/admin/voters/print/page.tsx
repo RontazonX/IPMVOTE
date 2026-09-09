@@ -52,7 +52,7 @@ export default function PrintVoters() {
           <div key={voter.id} className="border-2 border-slate-800 p-4 rounded-xl text-center flex flex-col items-center break-inside-avoid">
             <h3 className="font-bold text-lg mb-2 line-clamp-1">{voter.name}</h3>
             <div className="bg-white p-2 border border-slate-300 rounded-lg inline-block mb-3">
-              <QRCodeSVG value={voter.token} size={120} level="H" />
+              <QRCodeSVG value={typeof window !== 'undefined' ? `${window.location.origin}/login?token=${voter.token}` : voter.token} size={120} level="H" />
             </div>
             <p className="font-mono font-bold text-xl tracking-widest">{voter.token}</p>
             <p className="text-xs text-slate-500 mt-2">Scan untuk masuk ke Bilik Suara</p>

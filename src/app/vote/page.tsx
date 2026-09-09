@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { CheckCircle2, Building, Image as ImageIcon } from "lucide-react";
-import { submitVote } from "../actions/vote";
+import { submitVote, getVoterElectionSettings } from "../actions/vote";
 import { getCandidates } from "../actions/candidates";
 
 type Candidate = {
@@ -18,31 +18,37 @@ export default function VotePage() {
   const [candidates, setCandidates] = useState<Candidate[]>([]);
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [submitting, setSubmitting] = useState(false);
+  const [maxSelections, setMaxSelections] = useState(9);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 
   useEffect(() => {
-    async function fetchCandidates() {
+    async function fetchData() {
+      const settings = await getVoterElectionSettings();
+      if (settings && !settings.error) {
+        setMaxSelections(settings.maxSelectedFormaturs || 9);
+      }
+      
       const res = await getCandidates();
       if (res.data) {
         setCandidates(res.data);
       }
       setLoading(false);
     }
-    fetchCandidates();
+    fetchData();
   }, []);
 
   const toggleSelection = (id: string) => {
     setSelectedIds(prev => {
       if (prev.includes(id)) return prev.filter(cId => cId !== id);
-      if (prev.length >= 9) return prev; // Max 9
+      if (prev.length >= maxSelections) return prev; // Max check
       return [...prev, id];
     });
   };
 
   const handleSubmit = async () => {
-    if (selectedIds.length !== 9) {
-      alert(`Anda baru memilih ${selectedIds.length} dari 9 formatur yang wajib dipilih!`);
+    if (selectedIds.length !== maxSelections) {
+      alert(`Anda baru memilih ${selectedIds.length} dari ${maxSelections} formatur yang wajib dipilih!`);
       return;
     }
 
@@ -71,15 +77,15 @@ export default function VotePage() {
         <div className="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <div className="w-8 h-8 bg-amber-500 rounded-lg flex items-center justify-center text-white font-bold text-sm">
-              9
+              {maxSelections}
             </div>
             <h1 className="font-bold text-lg hidden sm:block text-slate-900">Bilik Suara Formatur</h1>
           </div>
           
           <div className="flex items-center gap-4">
             <div className="bg-slate-50 border border-slate-200 px-3 py-1.5 rounded-full text-sm font-medium flex items-center gap-2">
-              <span className={`${selectedIds.length === 9 ? 'text-emerald-600' : 'text-amber-600'}`}>
-                {selectedIds.length} / 9
+              <span className={`${selectedIds.length === maxSelections ? 'text-emerald-600' : 'text-amber-600'}`}>
+                {selectedIds.length} / {maxSelections}
               </span>
               <span className="text-slate-500 hidden sm:inline">Terpilih</span>
             </div>
@@ -90,8 +96,8 @@ export default function VotePage() {
       {/* Main Content */}
       <main className="max-w-6xl mx-auto px-4 py-8">
         <div className="mb-8">
-          <h2 className="text-2xl font-bold text-slate-900 mb-2">Pilih 9 Formatur Terbaik</h2>
-          <p className="text-slate-500">Klik pada kartu kandidat untuk memilih. Anda wajib memilih tepat 9 orang formatur.</p>
+          <h2 className="text-2xl font-bold text-slate-900 mb-2">Pilih {maxSelections} Formatur Terbaik</h2>
+          <p className="text-slate-500">Klik pada kartu kandidat untuk memilih. Anda wajib memilih tepat {maxSelections} orang formatur.</p>
         </div>
 
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 sm:gap-6">
@@ -154,21 +160,21 @@ export default function VotePage() {
       <div className="fixed bottom-0 left-0 w-full bg-white border-t border-slate-200 p-4 z-50">
         <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="text-sm font-medium text-slate-600">
-            {selectedIds.length === 9 ? (
+            {selectedIds.length === maxSelections ? (
               <span className="text-emerald-600 flex items-center gap-2">
                 <CheckCircle2 size={18} /> Pemilihan selesai, siap dikirim!
               </span>
             ) : (
-              <span>Anda masih perlu memilih <strong className="text-amber-600">{9 - selectedIds.length}</strong> kandidat lagi.</span>
+              <span>Anda masih perlu memilih <strong className="text-amber-600">{maxSelections - selectedIds.length}</strong> kandidat lagi.</span>
             )}
           </div>
           
           <button
             onClick={handleSubmit}
-            disabled={selectedIds.length !== 9 || submitting}
+            disabled={selectedIds.length !== maxSelections || submitting}
             className={`
               w-full sm:w-auto px-8 py-3 rounded-xl font-bold flex items-center justify-center gap-2 transition-all
-              ${selectedIds.length === 9 
+              ${selectedIds.length === maxSelections 
                 ? 'bg-amber-500 hover:bg-amber-600 text-white transform hover:-translate-y-0.5' 
                 : 'bg-slate-100 text-slate-400 cursor-not-allowed'
               }

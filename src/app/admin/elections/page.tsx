@@ -11,6 +11,8 @@ export default function ElectionsManagementPage() {
   // Form states
   const [name, setName] = useState("");
   const [slug, setSlug] = useState("");
+  const [level, setLevel] = useState("Pimpinan Ranting");
+  const [maxSelectedFormaturs, setMaxSelectedFormaturs] = useState(9);
   const [adminUsername, setAdminUsername] = useState("");
   const [adminPassword, setAdminPassword] = useState("");
 
@@ -31,7 +33,7 @@ export default function ElectionsManagementPage() {
     e.preventDefault();
     setIsSubmitting(true);
     
-    const res = await createElectionAndAdmin(name, slug, adminUsername, adminPassword);
+    const res = await createElectionAndAdmin(name, slug, adminUsername, adminPassword, level, maxSelectedFormaturs);
     setIsSubmitting(false);
     
     if (res.error) {
@@ -40,6 +42,8 @@ export default function ElectionsManagementPage() {
       alert("Event Pemilihan dan Admin berhasil dibuat!");
       setName("");
       setSlug("");
+      setLevel("Pimpinan Ranting");
+      setMaxSelectedFormaturs(9);
       setAdminUsername("");
       setAdminPassword("");
       fetchElections(); // refresh list
@@ -69,7 +73,10 @@ export default function ElectionsManagementPage() {
                 placeholder="Contoh: Pimpinan Ranting A"
                 className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent outline-none"
                 value={name}
-                onChange={(e) => setName(e.target.value)}
+                onChange={(e) => {
+                  setName(e.target.value);
+                  setSlug(e.target.value.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, ''));
+                }}
               />
             </div>
             <div className="space-y-2">
@@ -77,11 +84,37 @@ export default function ElectionsManagementPage() {
               <input 
                 type="text" 
                 required
-                placeholder="Contoh: pimpinan-ranting-a"
-                className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent outline-none"
+                readOnly
+                placeholder="Otomatis terisi dari nama"
+                className="w-full px-4 py-2 bg-slate-50 border border-slate-300 rounded-lg outline-none text-slate-500 cursor-not-allowed"
                 value={slug}
-                onChange={(e) => setSlug(e.target.value.toLowerCase().replace(/\s+/g, '-'))}
               />
+            </div>
+            <div className="space-y-2 md:col-span-2">
+              <label className="text-sm font-medium text-slate-700">Tingkat Pimpinan</label>
+              <select
+                required
+                className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent outline-none bg-white"
+                value={level}
+                onChange={(e) => setLevel(e.target.value)}
+              >
+                <option value="Pimpinan Ranting">Pimpinan Ranting</option>
+                <option value="Pimpinan Cabang">Pimpinan Cabang</option>
+                <option value="Pimpinan Daerah">Pimpinan Daerah</option>
+                <option value="Pimpinan Wilayah">Pimpinan Wilayah</option>
+              </select>
+            </div>
+            <div className="space-y-2 md:col-span-2">
+              <label className="text-sm font-medium text-slate-700">Jumlah Formatur Terpilih (Maksimal)</label>
+              <input 
+                type="number" 
+                min="1"
+                required
+                className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent outline-none"
+                value={maxSelectedFormaturs}
+                onChange={(e) => setMaxSelectedFormaturs(parseInt(e.target.value) || 9)}
+              />
+              <p className="text-xs text-slate-500 mt-1">Berapa banyak calon formatur yang dapat/harus dipilih oleh pemilih.</p>
             </div>
           </div>
           
@@ -135,6 +168,7 @@ export default function ElectionsManagementPage() {
               <thead>
                 <tr className="bg-slate-50 text-slate-600 text-sm">
                   <th className="px-4 py-3 font-medium rounded-l-lg">Nama Event</th>
+                  <th className="px-4 py-3 font-medium">Tingkat</th>
                   <th className="px-4 py-3 font-medium">Slug / URL</th>
                   <th className="px-4 py-3 font-medium">Status Publikasi</th>
                   <th className="px-4 py-3 font-medium">Akun Admin</th>
@@ -144,12 +178,15 @@ export default function ElectionsManagementPage() {
               <tbody>
                 {elections.length === 0 ? (
                   <tr>
-                    <td colSpan={5} className="text-center py-6 text-slate-500">Belum ada event pemilihan.</td>
+                    <td colSpan={6} className="text-center py-6 text-slate-500">Belum ada event pemilihan.</td>
                   </tr>
                 ) : (
                   elections.map((election) => (
                     <tr key={election.id} className="border-b border-slate-100 last:border-0 hover:bg-slate-50">
                       <td className="px-4 py-4 font-medium text-slate-800">{election.name}</td>
+                      <td className="px-4 py-4">
+                        <span className="bg-amber-50 text-amber-700 border border-amber-200 px-2 py-1 rounded text-xs font-bold">{election.level || 'Ranting'}</span>
+                      </td>
                       <td className="px-4 py-4 font-mono text-sm text-blue-600">/result/{election.slug}</td>
                       <td className="px-4 py-4">
                         {election.is_result_published ? (
