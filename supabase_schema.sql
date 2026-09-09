@@ -65,6 +65,15 @@ INSERT INTO storage.buckets (id, name, public)
 VALUES ('photos', 'photos', true) 
 ON CONFLICT (id) DO NOTHING;
 
+-- 7. App Settings Table
+CREATE TABLE IF NOT EXISTS app_settings (
+  id INTEGER PRIMARY KEY DEFAULT 1,
+  background_type TEXT DEFAULT 'default', -- 'default', 'youtube', or 'image'
+  background_value TEXT,
+  CHECK (id = 1)
+);
+INSERT INTO app_settings (id) VALUES (1) ON CONFLICT DO NOTHING;
+
 -- ==============================================================================
 -- AKTIFKAN RLS (Hanya mengontrol izin akses, data TIDAK terhapus)
 -- ==============================================================================
@@ -73,6 +82,7 @@ ALTER TABLE candidates ENABLE ROW LEVEL SECURITY;
 ALTER TABLE voters ENABLE ROW LEVEL SECURITY;
 ALTER TABLE votes ENABLE ROW LEVEL SECURITY;
 ALTER TABLE admins ENABLE ROW LEVEL SECURITY;
+ALTER TABLE app_settings ENABLE ROW LEVEL SECURITY;
 
 -- ==============================================================================
 -- POLICIES (Menggunakan IF NOT EXISTS untuk mencegah error duplikasi)
@@ -165,5 +175,15 @@ DO $$ BEGIN
   END IF;
   IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE tablename = 'objects' AND policyname = 'Admin Delete') THEN
     CREATE POLICY "Admin Delete" ON storage.objects FOR DELETE USING (bucket_id = 'photos');
+  END IF;
+END $$;
+
+-- App Settings Policies
+DO $$ BEGIN
+  IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE tablename = 'app_settings' AND policyname = 'Public can view settings') THEN
+    CREATE POLICY "Public can view settings" ON app_settings FOR SELECT USING (true);
+  END IF;
+  IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE tablename = 'app_settings' AND policyname = 'Allow anon update settings') THEN
+    CREATE POLICY "Allow anon update settings" ON app_settings FOR UPDATE USING (true);
   END IF;
 END $$;

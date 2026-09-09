@@ -2,6 +2,7 @@ import Link from "next/link";
 import { ArrowRight, CheckCircle2, QrCode, ShieldCheck, Users, BarChart3, Layers, LockKeyhole } from "lucide-react";
 import { createClient } from "@/utils/supabase/server";
 import { CountingNumber } from "@/components/ui/counting-number";
+import { getAppSettings } from "./actions/settings";
 
 export const runtime = 'edge';
 
@@ -17,6 +18,8 @@ export default async function LandingPage() {
     wilayahCount: 0
   };
 
+  let bgSettings = { background_type: 'default', background_value: '' };
+
   try {
     const supabase = await createClient();
     const { data: elections, error: electionsError } = await supabase
@@ -25,14 +28,20 @@ export default async function LandingPage() {
 
     if (electionsError) throw electionsError;
 
-    if (elections) {
-      stats = {
-        rantingCount: elections.filter(e => e.level === 'Pimpinan Ranting').length,
-        cabangCount: elections.filter(e => e.level === 'Pimpinan Cabang').length,
-        daerahCount: elections.filter(e => e.level === 'Pimpinan Daerah').length,
-        wilayahCount: elections.filter(e => e.level === 'Pimpinan Wilayah').length,
+      if (elections) {
+        stats = {
+          rantingCount: elections.filter(e => e.level === 'Pimpinan Ranting').length,
+          cabangCount: elections.filter(e => e.level === 'Pimpinan Cabang').length,
+          daerahCount: elections.filter(e => e.level === 'Pimpinan Daerah').length,
+          wilayahCount: elections.filter(e => e.level === 'Pimpinan Wilayah').length,
+        };
+      }
+
+      const appSettingsRes = await getAppSettings();
+      bgSettings = {
+        background_type: appSettingsRes.background_type || 'default',
+        background_value: appSettingsRes.background_value || ''
       };
-    }
   } catch (err: unknown) {
     errorMessage = err instanceof Error ? err.message : String(err);
   }
@@ -82,21 +91,33 @@ export default async function LandingPage() {
 
       <main>
         {/* Hero Section */}
-        <section id="home" className="relative pt-24 pb-32 overflow-hidden bg-slate-50">
-          <div className="max-w-6xl mx-auto px-6 text-center">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white text-amber-600 font-medium text-sm mb-8 border border-amber-200 shadow-sm">
-              <span className="relative flex h-3 w-3">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-3 w-3 bg-amber-500"></span>
-              </span>
-              Platform Pemilihan Digital Muhammadiyah
+        <section id="home" className={`relative pt-24 pb-32 overflow-hidden ${bgSettings.background_type === 'default' ? 'bg-slate-50' : 'bg-slate-900 text-white'}`}>
+          {/* Dynamic Backgrounds */}
+          {bgSettings.background_type === 'youtube' && bgSettings.background_value && (
+            <div className="absolute inset-0 z-0">
+              <iframe
+                src={`https://www.youtube.com/embed/${bgSettings.background_value}?autoplay=1&mute=1&controls=0&loop=1&playlist=${bgSettings.background_value}&modestbranding=1&showinfo=0`}
+                className="w-full h-[150%] sm:h-[200%] object-cover pointer-events-none -translate-y-1/4"
+                allow="autoplay; encrypted-media"
+              />
+              <div className="absolute inset-0 bg-black/60 z-10" />
             </div>
+          )}
+
+          {bgSettings.background_type === 'image' && bgSettings.background_value && (
+            <div className="absolute inset-0 z-0">
+              <img src={bgSettings.background_value} alt="Background" className="w-full h-full object-cover" />
+              <div className="absolute inset-0 bg-black/60 z-10" />
+            </div>
+          )}
+          
+          <div className="relative z-20 max-w-6xl mx-auto px-6 text-center">
             
-            <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight text-slate-900 mb-6 leading-tight">
+            <h1 className={`text-5xl md:text-7xl font-extrabold tracking-tight mb-6 leading-tight ${bgSettings.background_type === 'default' ? 'text-slate-900' : 'text-white'}`}>
               E-Voting Modern <br className="hidden md:block" />
               <span className="text-amber-500">Pelajar Muhammadiyah</span>
             </h1>
-            <p className="text-lg md:text-xl text-slate-600 max-w-3xl mx-auto mb-10 leading-relaxed">
+            <p className={`text-lg md:text-xl max-w-3xl mx-auto mb-10 leading-relaxed ${bgSettings.background_type === 'default' ? 'text-slate-600' : 'text-slate-200'}`}>
               Solusi digital terbaik untuk Musyran, Musycab, Musyda, hingga Muktamar. Kelola pemilihan formatur dengan mudah, aman, hemat biaya, dan dukung banyak pemilihan sekaligus secara bersamaan.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">

@@ -141,7 +141,7 @@ export default function ResultPage() {
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <button onClick={() => window.location.reload()} className="px-8 py-3 bg-amber-500 hover:bg-amber-600 text-white font-medium rounded-xl transition-all flex items-center justify-center gap-2">
-              <Activity size={20} /> Cek Lagi
+              Cek Lagi
             </button>
             <Link href="/" className="px-8 py-3 bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 font-medium rounded-xl transition-all flex items-center justify-center">
               Kembali ke Beranda

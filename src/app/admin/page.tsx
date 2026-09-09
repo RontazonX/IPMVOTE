@@ -135,9 +135,14 @@ export default function AdminDashboard() {
             <h1 className="text-2xl font-bold text-slate-900 tracking-tight">Pusat Pemantauan Superadmin</h1>
             <p className="text-slate-500 mt-1">Pantau seluruh event musyawarah yang sedang berlangsung.</p>
           </div>
-          <a href={`${basePath}/elections`} className="px-4 py-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors shadow-sm">
-            + Manajemen Event
-          </a>
+          <div className="flex items-center gap-3">
+            <a href={`${basePath}/settings`} className="px-4 py-2 bg-white border border-slate-200 text-slate-700 rounded-lg font-medium hover:bg-slate-50 transition-colors shadow-sm">
+              Pengaturan Tampilan
+            </a>
+            <a href={`${basePath}/elections`} className="px-4 py-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors shadow-sm">
+              + Manajemen Event
+            </a>
+          </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
