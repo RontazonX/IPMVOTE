@@ -33,7 +33,8 @@ CREATE TABLE IF NOT EXISTS voters (
   election_id UUID REFERENCES elections(id) ON DELETE CASCADE,
   name TEXT NOT NULL,
   token TEXT UNIQUE NOT NULL,
-  is_voted BOOLEAN DEFAULT FALSE
+  is_voted BOOLEAN DEFAULT FALSE,
+  asal_pimpinan TEXT DEFAULT 'Lainnya'
 );
 
 -- 4. Votes Table
