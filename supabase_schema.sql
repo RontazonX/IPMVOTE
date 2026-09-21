@@ -75,6 +75,17 @@ CREATE TABLE IF NOT EXISTS app_settings (
 );
 INSERT INTO app_settings (id) VALUES (1) ON CONFLICT DO NOTHING;
 
+-- 8. Notifications Table
+CREATE TABLE IF NOT EXISTS notifications (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  title TEXT NOT NULL,
+  message TEXT NOT NULL,
+  is_read BOOLEAN DEFAULT FALSE,
+  election_id UUID REFERENCES elections(id) ON DELETE CASCADE,
+  user_id UUID REFERENCES admins(id) ON DELETE CASCADE -- if null, it's a global broadcast to all admins
+);
+
 -- ==============================================================================
 -- AKTIFKAN RLS (Hanya mengontrol izin akses, data TIDAK terhapus)
 -- ==============================================================================
@@ -84,10 +95,24 @@ ALTER TABLE voters ENABLE ROW LEVEL SECURITY;
 ALTER TABLE votes ENABLE ROW LEVEL SECURITY;
 ALTER TABLE admins ENABLE ROW LEVEL SECURITY;
 ALTER TABLE app_settings ENABLE ROW LEVEL SECURITY;
+ALTER TABLE notifications ENABLE ROW LEVEL SECURITY;
 
 -- ==============================================================================
 -- POLICIES (Menggunakan IF NOT EXISTS untuk mencegah error duplikasi)
 -- ==============================================================================
+
+-- Notifications Policies
+DO $$ BEGIN
+  IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE tablename = 'notifications' AND policyname = 'Admins can view their notifications') THEN
+    CREATE POLICY "Admins can view their notifications" ON notifications FOR SELECT USING (true);
+  END IF;
+  IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE tablename = 'notifications' AND policyname = 'Allow anon update notifications') THEN
+    CREATE POLICY "Allow anon update notifications" ON notifications FOR UPDATE USING (true);
+  END IF;
+  IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE tablename = 'notifications' AND policyname = 'Allow anon insert notifications') THEN
+    CREATE POLICY "Allow anon insert notifications" ON notifications FOR INSERT WITH CHECK (true);
+  END IF;
+END $$;
 
 -- Elections Policies
 DO $$ BEGIN

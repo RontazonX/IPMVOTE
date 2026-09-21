@@ -23,6 +23,7 @@ export default function Sidebar({ role, electionId }: { role?: string, electionI
     menuItems = [
       { icon: LayoutDashboard, label: "Pusat Pemantauan", href: basePath },
       { icon: Settings, label: "Manajemen Event", href: `${basePath}/elections` },
+      { icon: Users, label: "Manajemen Admin", href: `${basePath}/admins` },
     ];
   }
 

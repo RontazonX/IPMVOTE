@@ -6,6 +6,7 @@ import { Plus, Trash2, QrCode, X } from "lucide-react";
 import { QRCodeSVG } from "qrcode.react";
 import { createClient } from "@/utils/supabase/client";
 import { addVoter, deleteVoter, addMultipleVoters, deleteAllVoters } from "@/app/actions/voters";
+import { importVotersCsv } from "@/app/actions/import";
 
 type Voter = {
   id: string;
@@ -26,6 +27,9 @@ export default function AdminVoters() {
 
   const [showBulkModal, setShowBulkModal] = useState(false);
   const [bulkCount, setBulkCount] = useState("10");
+
+  const [showImportModal, setShowImportModal] = useState(false);
+  const [csvFile, setCsvFile] = useState<File | null>(null);
 
   const pathname = usePathname();
   const basePath = pathname.match(/^\/admin-[^\/]+/)?.[0] || '/admin';
@@ -110,6 +114,28 @@ export default function AdminVoters() {
       if (res.token) {
         setShowQR(res.token);
       }
+    }
+  };
+
+  const handleImportSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!csvFile) {
+      toast.error("Silakan pilih file CSV terlebih dahulu.");
+      return;
+    }
+
+    setSubmitting(true);
+    const text = await csvFile.text();
+    const res = await importVotersCsv(text);
+    setSubmitting(false);
+
+    if (res.error) {
+      toast.error(res.error);
+    } else {
+      setShowImportModal(false);
+      setCsvFile(null);
+      toast.success(`Berhasil mengimpor ${res.count} pemilih!`);
+      fetchVoters();
     }
   };
 
@@ -228,6 +254,47 @@ export default function AdminVoters() {
         </div>
       )}
 
+      {/* Modal Import CSV */}
+      {showImportModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 backdrop-blur-sm px-4 animate-in fade-in duration-200">
+          <div className="bg-white p-6 rounded-2xl shadow-xl w-full max-w-md animate-in zoom-in-95 duration-200">
+            <div className="flex justify-between items-center mb-6">
+              <h3 className="text-xl font-bold text-slate-800">Import dari CSV/Excel</h3>
+              <button onClick={() => setShowImportModal(false)} className="text-slate-400 hover:text-slate-600 transition-colors">
+                <X size={24} />
+              </button>
+            </div>
+            
+            <form onSubmit={handleImportSubmit} className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-slate-700 mb-2">Upload File CSV</label>
+                <input 
+                  type="file" 
+                  accept=".csv"
+                  onChange={(e) => setCsvFile(e.target.files?.[0] || null)}
+                  className="w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 transition-all cursor-pointer border border-slate-200 rounded-xl p-2" 
+                />
+              </div>
+              <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 text-xs text-amber-800">
+                <p className="font-bold mb-1">Format CSV:</p>
+                <p>Kolom 1: Nama Pemilih</p>
+                <p>Kolom 2: Asal Pimpinan (Opsional)</p>
+                <p className="mt-2 opacity-80">Catatan: Pisahkan dengan koma (,) atau titik koma (;).</p>
+              </div>
+              
+              <div className="flex gap-3 mt-6">
+                <button type="button" onClick={() => setShowImportModal(false)} className="flex-1 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium rounded-lg transition-colors">
+                  Batal
+                </button>
+                <button disabled={submitting || !csvFile} type="submit" className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg py-2.5 transition-all shadow-lg shadow-blue-600/30 disabled:opacity-70">
+                  {submitting ? "Memproses..." : "Import"}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold text-slate-800 tracking-tight">Data Pemilih</h1>
@@ -241,6 +308,12 @@ export default function AdminVoters() {
           >
             🖨️ Cetak Semua QR Code
           </a>
+          <button 
+            onClick={() => setShowImportModal(true)}
+            className="bg-white border border-blue-200 text-blue-700 hover:bg-blue-50 px-4 py-2 rounded-lg font-medium transition-colors shadow-sm"
+          >
+            📥 Import CSV
+          </button>
           <button 
             onClick={() => setShowAddModal(true)}
             className="bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 px-4 py-2 rounded-lg font-medium transition-colors shadow-sm"

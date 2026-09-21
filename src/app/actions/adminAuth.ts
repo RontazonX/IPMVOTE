@@ -4,6 +4,8 @@ import { createClient } from "@/utils/supabase/server";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
+import bcrypt from "bcryptjs";
+
 export async function loginAdmin(username: string, passwordInput: string) {
   const supabase = await createClient();
 
@@ -17,9 +19,26 @@ export async function loginAdmin(username: string, passwordInput: string) {
     return { error: "Username tidak ditemukan!" };
   }
 
-  // Dalam skenario dunia nyata, gunakan bcrypt untuk mencocokkan hash password.
-  if (admin.password !== passwordInput) {
+  let isPasswordValid = false;
+  let needsHashing = false;
+
+  if (admin.password.startsWith("$2a$") || admin.password.startsWith("$2b$") || admin.password.startsWith("$2y$")) {
+    isPasswordValid = await bcrypt.compare(passwordInput, admin.password);
+  } else {
+    // Legacy plaintext password migration
+    if (admin.password === passwordInput) {
+      isPasswordValid = true;
+      needsHashing = true;
+    }
+  }
+
+  if (!isPasswordValid) {
     return { error: "Password admin salah!" };
+  }
+
+  if (needsHashing) {
+    const hashedPassword = await bcrypt.hash(passwordInput, 10);
+    await supabase.from("admins").update({ password: hashedPassword }).eq("id", admin.id);
   }
 
   let slug = "";
