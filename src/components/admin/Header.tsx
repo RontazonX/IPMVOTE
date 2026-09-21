@@ -2,7 +2,13 @@
 
 import { Bell, Search, User } from "lucide-react";
 
-export default function Header() {
+export default function Header({ 
+  username = "Admin", 
+  roleText = "Panitia Pemilihan" 
+}: { 
+  username?: string;
+  roleText?: string;
+}) {
   return (
     <header className="h-20 bg-white border-b border-slate-200 flex items-center justify-between px-8 sticky top-0 z-10">
       <div className="flex items-center bg-white border border-slate-200 px-4 py-2 rounded-xl w-96 focus-within:border-amber-500 transition-colors shadow-sm">
@@ -22,8 +28,8 @@ export default function Header() {
         
         <div className="flex items-center gap-3 pl-6 border-l border-slate-200">
           <div className="text-right hidden md:block">
-            <p className="text-sm font-semibold text-slate-900">Admin Utama</p>
-            <p className="text-xs text-slate-500">Panitia Pemilihan</p>
+            <p className="text-sm font-semibold text-slate-900">{username}</p>
+            <p className="text-xs text-slate-500">{roleText}</p>
           </div>
           <div className="w-10 h-10 rounded-xl bg-amber-50 flex items-center justify-center text-amber-500 border border-amber-100">
             <User size={20} />

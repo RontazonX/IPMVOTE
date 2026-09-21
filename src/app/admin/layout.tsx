@@ -3,6 +3,8 @@ import Header from "@/components/admin/Header";
 import { getAdminSession } from "@/utils/session";
 import { redirect } from "next/navigation";
 
+import { createClient } from "@/utils/supabase/server";
+
 export default async function AdminLayout({
   children,
 }: {
@@ -13,6 +15,21 @@ export default async function AdminLayout({
     redirect("/admin-login");
   }
 
+  const supabase = await createClient();
+  const { data: adminData } = await supabase
+    .from("admins")
+    .select("username, role")
+    .eq("id", session.id)
+    .single();
+
+  const username = adminData?.username || "Admin";
+  let roleText = "Panitia Pemilihan";
+  if (adminData?.role === "superadmin") {
+    roleText = "Super Admin";
+  } else if (adminData?.role === "admin") {
+    roleText = "Admin Cabang";
+  }
+
   return (
     <div className="flex h-screen bg-slate-50 overflow-hidden print:h-auto print:overflow-visible">
       <div className="print:hidden">
@@ -20,7 +37,7 @@ export default async function AdminLayout({
       </div>
       <div className="flex-1 flex flex-col relative overflow-y-auto overflow-x-hidden print:overflow-visible print:block">
         <div className="print:hidden">
-          <Header />
+          <Header username={username} roleText={roleText} />
         </div>
         <main className="p-8">
           <div className="mx-auto max-w-7xl">
