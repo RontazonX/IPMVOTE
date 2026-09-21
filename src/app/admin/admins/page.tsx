@@ -4,7 +4,7 @@ import { toast } from "sonner";
 import { useState, useEffect } from "react";
 import { Plus, Trash2, Edit2, ShieldAlert } from "lucide-react";
 import { getAdmins, createAdmin, updateAdmin, deleteAdmin } from "@/app/actions/admins";
-import { getAdminElectionInfo, getElections } from "@/app/actions/elections";
+import { getAdminElectionInfo, getAllElections } from "@/app/actions/elections";
 
 export default function AdminManagement() {
   const [admins, setAdmins] = useState<any[]>([]);
@@ -26,7 +26,7 @@ export default function AdminManagement() {
     setLoading(true);
     const [adminsRes, electionsRes] = await Promise.all([
       getAdmins(),
-      getElections()
+      getAllElections()
     ]);
     
     if (adminsRes.admins) {
