@@ -1,5 +1,6 @@
 "use client";
 
+import { toast } from "sonner";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { CheckCircle2, Building, Image as ImageIcon } from "lucide-react";
@@ -48,7 +49,7 @@ export default function VotePage() {
 
   const handleSubmit = async () => {
     if (selectedIds.length !== maxSelections) {
-      alert(`Anda baru memilih ${selectedIds.length} dari ${maxSelections} formatur yang wajib dipilih!`);
+      toast.error(`Anda baru memilih ${selectedIds.length} dari ${maxSelections} formatur yang wajib dipilih!`);
       return;
     }
 
@@ -59,9 +60,9 @@ export default function VotePage() {
     setSubmitting(false);
 
     if (res.error) {
-      alert(res.error);
+      toast.error(res.error);
     } else {
-      alert("Suara berhasil dikirim! Terima kasih atas partisipasi Anda.");
+      toast.success("Suara berhasil dikirim! Terima kasih atas partisipasi Anda.");
       router.push("/");
     }
   };

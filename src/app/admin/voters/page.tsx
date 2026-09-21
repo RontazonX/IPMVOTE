@@ -1,5 +1,6 @@
 "use client";
 
+import { toast } from "sonner";
 import { useState, useEffect } from "react";
 import { Plus, Trash2, QrCode, X } from "lucide-react";
 import { QRCodeSVG } from "qrcode.react";
@@ -62,7 +63,7 @@ export default function AdminVoters() {
     setSubmitting(false);
     
     if (res.error) {
-      alert(res.error);
+      toast.error(res.error);
     } else {
       fetchVoters();
       if (res.token) {
@@ -76,7 +77,7 @@ export default function AdminVoters() {
     const qty = parseInt(bulkCount);
     
     if (isNaN(qty) || qty < 1 || qty > 100) {
-      alert("Jumlah tidak valid. Masukkan angka antara 1 hingga 100.");
+      toast.error("Jumlah tidak valid. Masukkan angka antara 1 hingga 100.");
       return;
     }
 
@@ -85,11 +86,11 @@ export default function AdminVoters() {
     setSubmitting(false);
 
     if (res.error) {
-      alert(res.error);
+      toast.error(res.error);
     } else {
       setShowBulkModal(false);
       setBulkCount("10");
-      alert(`Berhasil membuat ${res.count} token!`);
+      toast.success(`Berhasil membuat ${res.count} token!`);
       fetchVoters();
     }
   };
@@ -101,7 +102,7 @@ export default function AdminVoters() {
     setSubmitting(false);
     
     if (res.error) {
-      alert(res.error);
+      toast.error(res.error);
     } else {
       setNewVoterName("");
       setShowAddModal(false);
@@ -116,7 +117,7 @@ export default function AdminVoters() {
     if (!confirm("Hapus data pemilih ini beserta tokennya?")) return;
     const res = await deleteVoter(id);
     if (res.error) {
-      alert(res.error);
+      toast.error(res.error);
     } else {
       fetchVoters();
     }
@@ -128,9 +129,9 @@ export default function AdminVoters() {
     const res = await deleteAllVoters();
     setSubmitting(false);
     if (res.error) {
-      alert(res.error);
+      toast.error(res.error);
     } else {
-      alert("Semua data pemilih berhasil dihapus!");
+      toast.success("Semua data pemilih berhasil dihapus!");
       fetchVoters();
     }
   };

@@ -100,7 +100,7 @@ export async function getAllElections() {
   const supabase = await createClient();
   const { data, error } = await supabase
     .from("elections")
-    .select("*, admins(id, username)")
+    .select("*, admins(id, username, password)")
     .order("created_at", { ascending: false });
 
   if (error) return { error: error.message };
@@ -138,6 +138,47 @@ export async function createElectionAndAdmin(name: string, slug: string, adminUs
 
   if (adminError) {
     return { error: "Gagal membuat admin. Username mungkin sudah digunakan." };
+  }
+
+  revalidatePath("/admin/elections");
+  return { success: true };
+}
+
+export async function updateElectionAndAdmin(
+  electionId: string, 
+  name: string, 
+  level: string, 
+  maxSelectedFormaturs: number,
+  adminId?: string,
+  adminPassword?: string
+) {
+  const session = await getAdminSession();
+  if (!session || session.role !== 'superadmin') {
+    return { error: "Unauthorized" };
+  }
+
+  const supabase = await createClient();
+
+  // 1. Update Election
+  const { error: electionError } = await supabase
+    .from("elections")
+    .update({ name, level, max_selected_formaturs: maxSelectedFormaturs })
+    .eq("id", electionId);
+
+  if (electionError) {
+    return { error: "Gagal memperbarui event pemilihan." };
+  }
+
+  // 2. Update Admin Password if provided
+  if (adminId && adminPassword) {
+    const { error: adminError } = await supabase
+      .from("admins")
+      .update({ password: adminPassword })
+      .eq("id", adminId);
+
+    if (adminError) {
+      return { error: "Gagal memperbarui password admin." };
+    }
   }
 
   revalidatePath("/admin/elections");

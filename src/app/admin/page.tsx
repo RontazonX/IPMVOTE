@@ -1,5 +1,6 @@
 "use client";
 
+import { toast } from "sonner";
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import { togglePublishResultStatus, resetElection, getAdminElectionInfo, getSuperadminDashboardStats } from "@/app/actions/elections";
@@ -108,10 +109,10 @@ export default function AdminDashboard() {
     setToggling(false);
     
     if (res.error) {
-      alert(res.error);
+      toast.error(res.error);
     } else {
       setIsPublished(res.status!);
-      alert(res.status ? "Hasil berhasil dipublikasikan!" : "Hasil disembunyikan dari publik.");
+      toast.success(res.status ? "Hasil berhasil dipublikasikan!" : "Hasil disembunyikan dari publik.");
     }
   };
 
@@ -123,9 +124,9 @@ export default function AdminDashboard() {
     setToggling(false);
     
     if (res.error) {
-      alert(res.error);
+      toast.error(res.error);
     } else {
-      alert("Pemilihan berhasil di-reset!");
+      toast.success("Pemilihan berhasil di-reset!");
       window.location.reload();
     }
   };

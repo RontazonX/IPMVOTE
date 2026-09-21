@@ -42,8 +42,8 @@ export default async function LandingPage() {
         background_type: appSettingsRes.background_type || 'default',
         background_value: appSettingsRes.background_value || ''
       };
-  } catch (err: unknown) {
-    errorMessage = err instanceof Error ? err.message : String(err);
+  } catch (err: any) {
+    errorMessage = err?.message || (err instanceof Error ? err.message : JSON.stringify(err));
   }
 
   if (errorMessage) {

@@ -1,5 +1,6 @@
 "use client";
 
+import { toast } from "sonner";
 import { useState, useEffect } from "react";
 import { Plus, Trash2, X, Image as ImageIcon } from "lucide-react";
 import { getCandidates, addCandidate, deleteCandidate } from "@/app/actions/candidates";
@@ -36,7 +37,7 @@ export default function AdminCandidates() {
     setSubmitting(false);
     
     if (res.error) {
-      alert(res.error);
+      toast.error(res.error);
     } else {
       setShowAddModal(false);
       fetchCandidates();
@@ -47,7 +48,7 @@ export default function AdminCandidates() {
     if (!confirm("Yakin ingin menghapus kandidat ini?")) return;
     const res = await deleteCandidate(id);
     if (res.error) {
-      alert(res.error);
+      toast.error(res.error);
     } else {
       fetchCandidates();
     }

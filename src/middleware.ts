@@ -22,8 +22,8 @@ export default function proxy(request: NextRequest) {
         return NextResponse.redirect(new URL('/admin-login', request.url));
       }
       
-      // Rewrite URL sehingga Next.js App Router membaca dari folder /admin
-      return NextResponse.rewrite(new URL(`/admin${rest}`, request.url));
+      // Biarkan next.config.ts yang melakukan rewrite agar Next.js router tidak 404
+      return NextResponse.next();
     } catch {
       return NextResponse.redirect(new URL('/admin-login', request.url));
     }

@@ -10,6 +10,8 @@ export const metadata: Metadata = {
   description: "Website resmi pemilihan formatur PC IPM Wirobrajan.",
 };
 
+import { Toaster } from "sonner";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -19,6 +21,7 @@ export default function RootLayout({
     <html lang="id" className="h-full">
       <body className={clsx(inter.className, "h-full bg-slate-50 text-slate-900")}>
         {children}
+        <Toaster position="top-center" richColors />
       </body>
     </html>
   );
