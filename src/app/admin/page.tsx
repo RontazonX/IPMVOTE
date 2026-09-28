@@ -12,7 +12,6 @@ import { createClient } from "@/utils/supabase/client";
 import { EvotingMetrics } from "@/components/analytics/EvotingMetrics";
 import { EvotingLeaderboard } from "@/components/analytics/EvotingLeaderboard";
 import { GlobalParticipationChart } from "@/components/analytics/GlobalParticipationChart";
-import { EvotingDemographics } from "@/components/analytics/EvotingDemographics";
 
 type Stats = {
   totalVoters: number;
@@ -304,13 +303,8 @@ export default function AdminDashboard() {
         totalCandidates={stats.totalCandidates}
       />
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-2">
-          <EvotingLeaderboard data={leaderboard} maxHighlight={13} />
-        </div>
-        <div className="lg:col-span-1">
-          <EvotingDemographics data={demographics} totalVoters={stats.totalVoters} />
-        </div>
+      <div className="grid grid-cols-1 gap-6">
+        <EvotingLeaderboard data={leaderboard} maxHighlight={13} />
       </div>
     </div>
   );
