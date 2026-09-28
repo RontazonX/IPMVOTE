@@ -100,7 +100,7 @@ export default function AdminDashboard() {
 
         const { data: votersList } = await supabase.from("voters").select("asal_pimpinan").eq("election_id", eId);
         if (votersList) {
-          const regionCounts = {};
+          const regionCounts: Record<string, number> = {};
           votersList.forEach(v => {
             const region = v.asal_pimpinan || "Lainnya";
             regionCounts[region] = (regionCounts[region] || 0) + 1;
