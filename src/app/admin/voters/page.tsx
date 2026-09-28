@@ -169,10 +169,10 @@ export default function AdminVoters() {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 backdrop-blur-sm" onClick={() => setShowQR(null)}>
           <div className="bg-white p-8 rounded-2xl shadow-2xl text-center transform scale-100 transition-all" onClick={e => e.stopPropagation()}>
             <h3 className="text-xl font-bold text-slate-800 mb-6">Scan QR untuk Memilih</h3>
-            <div className="bg-white p-4 rounded-xl border-4 border-blue-600 inline-block mb-4 shadow-lg shadow-blue-600/20">
+            <div className="bg-white p-4 rounded-xl border-4 border-amber-600 inline-block mb-4 shadow-lg shadow-amber-600/20">
               <QRCodeSVG value={typeof window !== 'undefined' ? `${window.location.origin}/login?token=${showQR}` : showQR} size={250} level="H" includeMargin={true} />
             </div>
-            <p className="text-2xl font-mono font-bold tracking-widest text-blue-600 bg-blue-50 py-2 rounded-lg">{showQR}</p>
+            <p className="text-2xl font-mono font-bold tracking-widest text-amber-600 bg-amber-50 py-2 rounded-lg">{showQR}</p>
             <p className="text-sm text-slate-500 mt-4">Gunakan kamera atau aplikasi scanner pada halaman utama.</p>
             <button 
               onClick={() => setShowQR(null)}
@@ -203,7 +203,7 @@ export default function AdminVoters() {
                   value={newVoterName}
                   onChange={(e) => setNewVoterName(e.target.value)}
                   placeholder="Contoh: Ranting SMA Muh 3"
-                  className="w-full bg-slate-50 border border-slate-200 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all" 
+                  className="w-full bg-slate-50 border border-slate-200 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-amber-500 transition-all" 
                 />
               </div>
               
@@ -236,7 +236,7 @@ export default function AdminVoters() {
                   value={bulkCount}
                   onChange={(e) => setBulkCount(e.target.value)}
                   required
-                  className="w-full bg-slate-50 border border-slate-200 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all text-center text-lg font-bold" 
+                  className="w-full bg-slate-50 border border-slate-200 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-amber-500 transition-all text-center text-lg font-bold" 
                 />
               </div>
               <p className="text-xs text-slate-500 text-center">Akan menghasilkan token acak tanpa nama spesifik.</p>
@@ -272,7 +272,7 @@ export default function AdminVoters() {
                   type="file" 
                   accept=".csv"
                   onChange={(e) => setCsvFile(e.target.files?.[0] || null)}
-                  className="w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 transition-all cursor-pointer border border-slate-200 rounded-xl p-2" 
+                  className="w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-amber-50 file:text-amber-700 hover:file:bg-amber-100 transition-all cursor-pointer border border-slate-200 rounded-xl p-2" 
                 />
               </div>
               <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 text-xs text-amber-800">
@@ -286,7 +286,7 @@ export default function AdminVoters() {
                 <button type="button" onClick={() => setShowImportModal(false)} className="flex-1 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium rounded-lg transition-colors">
                   Batal
                 </button>
-                <button disabled={submitting || !csvFile} type="submit" className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg py-2.5 transition-all shadow-lg shadow-blue-600/30 disabled:opacity-70">
+                <button disabled={submitting || !csvFile} type="submit" className="flex-1 bg-amber-600 hover:bg-amber-700 text-white font-medium rounded-lg py-2.5 transition-all shadow-lg shadow-amber-600/30 disabled:opacity-70">
                   {submitting ? "Memproses..." : "Import"}
                 </button>
               </div>
@@ -310,7 +310,7 @@ export default function AdminVoters() {
           </a>
           <button 
             onClick={() => setShowImportModal(true)}
-            className="bg-white border border-blue-200 text-blue-700 hover:bg-blue-50 px-4 py-2 rounded-lg font-medium transition-colors shadow-sm"
+            className="bg-white border border-amber-200 text-amber-700 hover:bg-amber-50 px-4 py-2 rounded-lg font-medium transition-colors shadow-sm"
           >
             📥 Import CSV
           </button>
@@ -323,7 +323,7 @@ export default function AdminVoters() {
           <button 
             onClick={handleAddRandom}
             disabled={submitting}
-            className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium flex items-center gap-2 transition-colors shadow-sm disabled:opacity-70"
+            className="bg-amber-600 hover:bg-amber-700 text-white px-4 py-2 rounded-lg font-medium flex items-center gap-2 transition-colors shadow-sm disabled:opacity-70"
           >
             <QrCode size={18} />
             + 1 Acak
@@ -368,12 +368,12 @@ export default function AdminVoters() {
                     <td className="px-6 py-4 font-medium text-slate-800">{voter.name}</td>
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-2">
-                        <code className="bg-slate-100 text-blue-600 px-2 py-1 rounded font-mono text-sm border border-slate-200">
+                        <code className="bg-slate-100 text-amber-600 px-2 py-1 rounded font-mono text-sm border border-slate-200">
                           {voter.token}
                         </code>
                         <button 
                           onClick={() => setShowQR(voter.token)}
-                          className="p-1.5 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-md transition-colors"
+                          className="p-1.5 text-slate-400 hover:text-amber-600 hover:bg-amber-50 rounded-md transition-colors"
                           title="Lihat QR Code"
                         >
                           <QrCode size={16} />

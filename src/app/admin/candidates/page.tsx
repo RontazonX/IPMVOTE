@@ -77,23 +77,23 @@ export default function AdminCandidates() {
               <div className="flex gap-4">
                 <div className="w-24">
                   <label className="block text-sm font-medium text-slate-700 mb-1">No. Urut</label>
-                  <input type="number" name="no" required className="w-full bg-slate-50 border border-slate-200 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                  <input type="number" name="no" required className="w-full bg-slate-50 border border-slate-200 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-amber-500" />
                 </div>
                 <div className="flex-1">
                   <label className="block text-sm font-medium text-slate-700 mb-1">Nama Lengkap</label>
-                  <input type="text" name="name" required className="w-full bg-slate-50 border border-slate-200 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                  <input type="text" name="name" required className="w-full bg-slate-50 border border-slate-200 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-amber-500" />
                 </div>
               </div>
               <div>
                 <label className="block text-sm font-medium text-slate-700 mb-1">Asal Pimpinan (Ranting/Cabang)</label>
-                <input type="text" name="asal_pimpinan" placeholder="Contoh: PR IPM SMA Muh 3" required className="w-full bg-slate-50 border border-slate-200 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                <input type="text" name="asal_pimpinan" placeholder="Contoh: PR IPM SMA Muh 3" required className="w-full bg-slate-50 border border-slate-200 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-amber-500" />
               </div>
               <div>
                 <label className="block text-sm font-medium text-slate-700 mb-1">Pass Foto</label>
-                <input type="file" name="photo" accept="image/*" className="w-full bg-slate-50 border border-slate-200 rounded-lg px-4 py-2 text-sm file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100" />
+                <input type="file" name="photo" accept="image/*" className="w-full bg-slate-50 border border-slate-200 rounded-lg px-4 py-2 text-sm file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-amber-50 file:text-amber-700 hover:file:bg-amber-100" />
               </div>
               
-              <button disabled={submitting} type="submit" className="w-full mt-4 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg px-4 py-2.5 transition-colors disabled:opacity-70">
+              <button disabled={submitting} type="submit" className="w-full mt-4 bg-amber-600 hover:bg-amber-700 text-white font-medium rounded-lg px-4 py-2.5 transition-colors disabled:opacity-70">
                 {submitting ? "Menyimpan..." : "Simpan Kandidat"}
               </button>
             </form>
@@ -108,7 +108,7 @@ export default function AdminCandidates() {
         </div>
         <button 
           onClick={() => setShowAddModal(true)}
-          className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium flex items-center gap-2 transition-colors shadow-sm"
+          className="bg-amber-600 hover:bg-amber-700 text-white px-4 py-2 rounded-lg font-medium flex items-center gap-2 transition-colors shadow-sm"
         >
           <Plus size={18} />
           Tambah Kandidat
@@ -136,7 +136,7 @@ export default function AdminCandidates() {
                 candidates.map((candidate) => (
                   <tr key={candidate.id} className="hover:bg-slate-50 transition-colors">
                     <td className="px-6 py-4 font-medium text-slate-700 text-center">
-                      <div className="w-8 h-8 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center font-bold text-sm mx-auto">
+                      <div className="w-8 h-8 rounded-full bg-amber-100 text-amber-600 flex items-center justify-center font-bold text-sm mx-auto">
                         {candidate.order_number}
                       </div>
                     </td>

@@ -76,7 +76,7 @@ export default function Header({
               <div className="p-4 border-b border-slate-100 flex items-center justify-between bg-slate-50">
                 <h3 className="font-bold text-slate-800">Notifikasi</h3>
                 {unreadCount > 0 && (
-                  <button onClick={handleMarkAllRead} className="text-xs font-medium text-brand-600 hover:text-brand-700 transition-colors">
+                  <button onClick={handleMarkAllRead} className="text-xs font-medium text-amber-600 hover:text-amber-700 transition-colors">
                     Tandai Semua Dibaca
                   </button>
                 )}

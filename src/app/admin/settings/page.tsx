@@ -94,7 +94,7 @@ export default function SettingsPage() {
 
               <label className={`border rounded-xl p-4 cursor-pointer flex flex-col items-center gap-2 transition-all ${bgType === 'image' ? 'border-amber-500 bg-amber-50 text-amber-700' : 'border-slate-200 hover:bg-slate-50 text-slate-600'}`}>
                 <input type="radio" name="bgType" value="image" checked={bgType === 'image'} onChange={() => setBgType('image')} className="sr-only" />
-                <div className="w-8 h-8 rounded-full bg-blue-100 text-blue-500 flex items-center justify-center">🖼</div>
+                <div className="w-8 h-8 rounded-full bg-amber-100 text-amber-500 flex items-center justify-center">🖼</div>
                 <span className="font-medium text-sm">Gambar (Foto)</span>
               </label>
             </div>

@@ -114,7 +114,7 @@ export default function AdminManagement() {
         </div>
         <button 
           onClick={openAddModal}
-          className="bg-brand-500 hover:bg-brand-600 text-white px-4 py-2 rounded-xl font-medium transition-colors shadow-sm flex items-center gap-2"
+          className="bg-amber-500 hover:bg-amber-600 text-white px-4 py-2 rounded-xl font-medium transition-colors shadow-sm flex items-center gap-2"
         >
           <Plus size={18} />
           Tambah Admin
@@ -145,7 +145,7 @@ export default function AdminManagement() {
                       {admin.username}
                     </td>
                     <td className="px-6 py-4">
-                      <span className={`px-2.5 py-1 rounded-full text-xs font-medium ${admin.role === 'superadmin' ? 'bg-amber-100 text-amber-700' : 'bg-blue-100 text-blue-700'}`}>
+                      <span className={`px-2.5 py-1 rounded-full text-xs font-medium ${admin.role === 'superadmin' ? 'bg-amber-100 text-amber-700' : 'bg-amber-100 text-amber-700'}`}>
                         {admin.role === 'superadmin' ? 'Super Admin' : 'Admin Cabang'}
                       </span>
                     </td>
@@ -160,7 +160,7 @@ export default function AdminManagement() {
                       <div className="flex items-center justify-center gap-2">
                         <button 
                           onClick={() => openEditModal(admin)}
-                          className="p-2 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" 
+                          className="p-2 text-slate-400 hover:text-amber-600 hover:bg-amber-50 rounded-lg transition-colors" 
                           title="Edit"
                         >
                           <Edit2 size={16} />
@@ -194,7 +194,7 @@ export default function AdminManagement() {
                   type="text" 
                   value={formData.username}
                   onChange={(e) => setFormData({...formData, username: e.target.value})}
-                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2 focus:outline-none focus:ring-2 focus:ring-brand-500" 
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2 focus:outline-none focus:ring-2 focus:ring-amber-500" 
                   required
                 />
               </div>
@@ -207,7 +207,7 @@ export default function AdminManagement() {
                   type="password" 
                   value={formData.password}
                   onChange={(e) => setFormData({...formData, password: e.target.value})}
-                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2 focus:outline-none focus:ring-2 focus:ring-brand-500" 
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2 focus:outline-none focus:ring-2 focus:ring-amber-500" 
                   required={!isEdit}
                   minLength={6}
                 />
@@ -218,7 +218,7 @@ export default function AdminManagement() {
                 <select 
                   value={formData.role}
                   onChange={(e) => setFormData({...formData, role: e.target.value, election_id: e.target.value === 'superadmin' ? '' : formData.election_id})}
-                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2 focus:outline-none focus:ring-2 focus:ring-brand-500"
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2 focus:outline-none focus:ring-2 focus:ring-amber-500"
                 >
                   <option value="admin">Admin Cabang</option>
                   <option value="superadmin">Super Admin</option>
@@ -231,7 +231,7 @@ export default function AdminManagement() {
                   <select 
                     value={formData.election_id}
                     onChange={(e) => setFormData({...formData, election_id: e.target.value})}
-                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2 focus:outline-none focus:ring-2 focus:ring-brand-500"
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2 focus:outline-none focus:ring-2 focus:ring-amber-500"
                     required={formData.role === "admin"}
                   >
                     <option value="">-- Pilih Event --</option>
@@ -253,7 +253,7 @@ export default function AdminManagement() {
                 <button 
                   disabled={submitting} 
                   type="submit" 
-                  className="flex-1 bg-brand-500 hover:bg-brand-600 text-white font-medium rounded-xl py-2.5 transition-colors disabled:opacity-70"
+                  className="flex-1 bg-amber-500 hover:bg-amber-600 text-white font-medium rounded-xl py-2.5 transition-colors disabled:opacity-70"
                 >
                   {submitting ? "Menyimpan..." : "Simpan"}
                 </button>

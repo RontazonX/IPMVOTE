@@ -100,8 +100,8 @@ export const GlobalParticipationChart = ({ data }: GlobalParticipationChartProps
           <h3 className="text-lg font-bold text-slate-900">Perbandingan Partisipasi Event</h3>
           <p className="text-sm text-slate-500">Tingkat partisipasi pemilih di setiap event formatur.</p>
         </div>
-        <div className="p-2 bg-brand-50 rounded-xl">
-          <BarChart3 className="w-5 h-5 text-brand-600" />
+        <div className="p-2 bg-amber-50 rounded-xl">
+          <BarChart3 className="w-5 h-5 text-amber-600" />
         </div>
       </div>
       

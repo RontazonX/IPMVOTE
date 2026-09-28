@@ -12,6 +12,7 @@ import { createClient } from "@/utils/supabase/client";
 import { EvotingMetrics } from "@/components/analytics/EvotingMetrics";
 import { EvotingLeaderboard } from "@/components/analytics/EvotingLeaderboard";
 import { GlobalParticipationChart } from "@/components/analytics/GlobalParticipationChart";
+import { EvotingDemographics } from "@/components/analytics/EvotingDemographics";
 
 type Stats = {
   totalVoters: number;
@@ -30,6 +31,7 @@ type Leaderboard = {
 export default function AdminDashboard() {
   const [stats, setStats] = useState<Stats>({ totalVoters: 0, votedVoters: 0, totalCandidates: 0 });
   const [leaderboard, setLeaderboard] = useState<Leaderboard[]>([]);
+  const [demographics, setDemographics] = useState<{region: string, count: number}[]>([]);
   
   const [isPublished, setIsPublished] = useState(false);
   const [toggling, setToggling] = useState(false);
@@ -96,6 +98,17 @@ export default function AdminDashboard() {
 
           setLeaderboard(board);
         }
+
+        const { data: votersList } = await supabase.from("voters").select("asal_pimpinan").eq("election_id", eId);
+        if (votersList) {
+          const regionCounts = {};
+          votersList.forEach(v => {
+            const region = v.asal_pimpinan || "Lainnya";
+            regionCounts[region] = (regionCounts[region] || 0) + 1;
+          });
+          const demoData = Object.keys(regionCounts).map(k => ({ region: k, count: regionCounts[k] }));
+          setDemographics(demoData);
+        }
       }
       setLoading(false);
     }
@@ -151,7 +164,7 @@ export default function AdminDashboard() {
             <a href={`${basePath}/settings`} className="px-4 py-2 bg-white border border-slate-200 text-slate-700 rounded-xl font-medium hover:bg-slate-50 transition-colors shadow-sm">
               Pengaturan Sistem
             </a>
-            <a href={`${basePath}/elections`} className="px-4 py-2 bg-brand-500 text-white rounded-xl font-medium hover:bg-brand-600 transition-colors shadow-sm">
+            <a href={`${basePath}/elections`} className="px-4 py-2 bg-amber-500 text-white rounded-xl font-medium hover:bg-amber-600 transition-colors shadow-sm">
               + Manajemen Event
             </a>
           </div>
@@ -169,7 +182,7 @@ export default function AdminDashboard() {
           <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-100">
             <div className="flex items-center justify-between mb-2">
               <h3 className="text-sm font-medium text-slate-500">Total Pemilih Global</h3>
-              <Users className="w-5 h-5 text-blue-500" />
+              <Users className="w-5 h-5 text-amber-500" />
             </div>
             <div className="text-3xl font-bold text-slate-900">{totalGlobalVoters}</div>
           </div>
@@ -210,7 +223,7 @@ export default function AdminDashboard() {
                       <span className="font-bold text-slate-900">{stat.votedVoters} / {stat.totalVoters}</span>
                     </div>
                     <div className="w-full bg-slate-100 rounded-full h-2">
-                      <div className="bg-brand-500 h-2 rounded-full" style={{ width: `${stat.totalVoters > 0 ? (stat.votedVoters / stat.totalVoters) * 100 : 0}%` }}></div>
+                      <div className="bg-amber-500 h-2 rounded-full" style={{ width: `${stat.totalVoters > 0 ? (stat.votedVoters / stat.totalVoters) * 100 : 0}%` }}></div>
                     </div>
                   </div>
                 </div>
@@ -249,8 +262,8 @@ export default function AdminDashboard() {
           </h1>
           <p className="text-slate-500 mt-1">Pantau proses pemilihan dan perolehan suara secara real-time.</p>
           {electionInfo && (
-            <p className="text-sm mt-2 text-brand-600 font-medium">
-              Link Hasil Publik: <a href={`/result/${electionInfo.slug}`} target="_blank" rel="noreferrer" className="underline hover:text-brand-700">/result/{electionInfo.slug}</a>
+            <p className="text-sm mt-2 text-amber-600 font-medium">
+              Link Hasil Publik: <a href={`/result/${electionInfo.slug}`} target="_blank" rel="noreferrer" className="underline hover:text-amber-700">/result/{electionInfo.slug}</a>
             </p>
           )}
         </div>
@@ -278,7 +291,7 @@ export default function AdminDashboard() {
           <a href={`${basePath}/candidates`} className="px-4 py-2 bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 rounded-xl text-sm font-medium transition-colors shadow-sm">
             + Tambah Kandidat
           </a>
-          <a href={`${basePath}/voters`} className="px-4 py-2 bg-brand-500 hover:bg-brand-600 text-white rounded-xl text-sm font-medium transition-colors shadow-sm">
+          <a href={`${basePath}/voters`} className="px-4 py-2 bg-amber-500 hover:bg-amber-600 text-white rounded-xl text-sm font-medium transition-colors shadow-sm">
             + Buat Token
           </a>
         </div>
@@ -291,8 +304,13 @@ export default function AdminDashboard() {
         totalCandidates={stats.totalCandidates}
       />
 
-      <div className="grid grid-cols-1 gap-6">
-        <EvotingLeaderboard data={leaderboard} maxHighlight={13} />
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="lg:col-span-2">
+          <EvotingLeaderboard data={leaderboard} maxHighlight={13} />
+        </div>
+        <div className="lg:col-span-1">
+          <EvotingDemographics data={demographics} totalVoters={stats.totalVoters} />
+        </div>
       </div>
     </div>
   );

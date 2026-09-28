@@ -22,8 +22,8 @@ export const EvotingDemographics: React.FC<EvotingDemographicsProps> = ({ data, 
           <h3 className="text-lg font-bold text-slate-900 dark:text-white">Partisipasi per Wilayah</h3>
           <p className="text-sm text-slate-500 dark:text-slate-400">Distribusi pemilih berdasarkan asal pimpinan.</p>
         </div>
-        <div className="p-2 bg-blue-50 dark:bg-blue-500/10 rounded-xl">
-          <MapPin className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+        <div className="p-2 bg-amber-50 dark:bg-amber-500/10 rounded-xl">
+          <MapPin className="w-5 h-5 text-amber-600 dark:text-amber-400" />
         </div>
       </div>
 

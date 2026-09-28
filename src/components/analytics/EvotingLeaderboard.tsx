@@ -41,13 +41,13 @@ export const EvotingLeaderboard: React.FC<EvotingLeaderboardProps> = ({ data, ma
                 key={candidate.candidateId} 
                 className={`relative overflow-hidden rounded-xl p-4 transition-all ${
                   isHighlighted 
-                    ? 'bg-brand-50/50 border border-brand-100' 
+                    ? 'bg-amber-50/50 border border-amber-100' 
                     : 'bg-slate-50 border border-slate-100'
                 }`}
               >
                 {/* Progress bar background */}
                 <div 
-                  className={`absolute top-0 left-0 h-full opacity-10 ${isHighlighted ? 'bg-brand-500' : 'bg-slate-400'}`}
+                  className={`absolute top-0 left-0 h-full opacity-10 ${isHighlighted ? 'bg-amber-500' : 'bg-slate-400'}`}
                   style={{ width: `${percentage}%` }}
                 />
                 
@@ -57,7 +57,7 @@ export const EvotingLeaderboard: React.FC<EvotingLeaderboardProps> = ({ data, ma
                       index === 0 ? 'bg-amber-100 text-amber-700' :
                       index === 1 ? 'bg-slate-200 text-slate-700' :
                       index === 2 ? 'bg-orange-100 text-orange-800' :
-                      isHighlighted ? 'bg-brand-100 text-brand-700' :
+                      isHighlighted ? 'bg-amber-100 text-amber-700' :
                       'bg-slate-100 text-slate-500'
                     }`}>
                       {index + 1}

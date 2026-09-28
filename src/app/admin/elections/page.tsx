@@ -122,7 +122,7 @@ export default function ElectionsManagementPage() {
                 type="text" 
                 required
                 placeholder="Contoh: Pimpinan Ranting A"
-                className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent outline-none"
+                className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-amber-600 focus:border-transparent outline-none"
                 value={name}
                 onChange={(e) => {
                   setName(e.target.value);
@@ -145,7 +145,7 @@ export default function ElectionsManagementPage() {
               <label className="text-sm font-medium text-slate-700">Tingkat Pimpinan</label>
               <select
                 required
-                className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent outline-none bg-white"
+                className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-amber-600 focus:border-transparent outline-none bg-white"
                 value={level}
                 onChange={(e) => setLevel(e.target.value)}
               >
@@ -161,7 +161,7 @@ export default function ElectionsManagementPage() {
                 type="number" 
                 min="1"
                 required
-                className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent outline-none"
+                className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-amber-600 focus:border-transparent outline-none"
                 value={maxSelectedFormaturs}
                 onChange={(e) => setMaxSelectedFormaturs(parseInt(e.target.value) || 9)}
               />
@@ -178,7 +178,7 @@ export default function ElectionsManagementPage() {
                   type="text" 
                   required
                   placeholder="Contoh: admin_ranting_a"
-                  className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent outline-none"
+                  className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-amber-600 focus:border-transparent outline-none"
                   value={adminUsername}
                   onChange={(e) => setAdminUsername(e.target.value)}
                 />
@@ -189,7 +189,7 @@ export default function ElectionsManagementPage() {
                   type="text" 
                   required
                   placeholder="Password aman"
-                  className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent outline-none"
+                  className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-amber-600 focus:border-transparent outline-none"
                   value={adminPassword}
                   onChange={(e) => setAdminPassword(e.target.value)}
                 />
@@ -201,7 +201,7 @@ export default function ElectionsManagementPage() {
             <button 
               type="submit" 
               disabled={isSubmitting}
-              className="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg disabled:opacity-70 transition-colors"
+              className="px-6 py-2 bg-amber-600 hover:bg-amber-700 text-white font-medium rounded-lg disabled:opacity-70 transition-colors"
             >
               {isSubmitting ? "Menyimpan..." : "Buat Event & Admin"}
             </button>
@@ -239,7 +239,7 @@ export default function ElectionsManagementPage() {
                       <td className="px-4 py-4">
                         <span className="bg-amber-50 text-amber-700 border border-amber-200 px-2 py-1 rounded text-xs font-bold">{election.level || 'Ranting'}</span>
                       </td>
-                      <td className="px-4 py-4 font-mono text-sm text-blue-600">/result/{election.slug}</td>
+                      <td className="px-4 py-4 font-mono text-sm text-amber-600">/result/{election.slug}</td>
                       <td className="px-4 py-4">
                         {election.is_result_published ? (
                           <span className="bg-emerald-100 text-emerald-700 px-2 py-1 rounded text-xs font-bold">Dipublikasi</span>
@@ -260,7 +260,7 @@ export default function ElectionsManagementPage() {
                       <td className="px-4 py-4">
                         <button 
                           onClick={() => handleEditClick(election)}
-                          className="flex items-center gap-1 px-3 py-1.5 bg-blue-50 text-blue-600 hover:bg-blue-100 border border-blue-200 rounded-lg text-sm font-medium transition-colors"
+                          className="flex items-center gap-1 px-3 py-1.5 bg-amber-50 text-amber-600 hover:bg-amber-100 border border-amber-200 rounded-lg text-sm font-medium transition-colors"
                         >
                           <Edit size={14} /> Edit & Info
                         </button>
@@ -292,28 +292,28 @@ export default function ElectionsManagementPage() {
               <form onSubmit={handleUpdate} className="space-y-6">
                 
                 {/* Admin Credentials Info Box */}
-                <div className="bg-blue-50 border border-blue-200 rounded-xl p-5 mb-6">
-                  <h3 className="text-sm font-bold text-blue-900 mb-3 flex items-center gap-2">
+                <div className="bg-amber-50 border border-amber-200 rounded-xl p-5 mb-6">
+                  <h3 className="text-sm font-bold text-amber-900 mb-3 flex items-center gap-2">
                     <Eye size={16} /> Kredensial Admin Saat Ini
                   </h3>
                   {editingElection.admins && editingElection.admins.length > 0 ? (
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div className="space-y-1">
-                        <label className="text-xs font-semibold text-blue-700 uppercase tracking-wider">Username</label>
-                        <div className="flex items-center justify-between bg-white px-3 py-2 border border-blue-100 rounded-lg">
+                        <label className="text-xs font-semibold text-amber-700 uppercase tracking-wider">Username</label>
+                        <div className="flex items-center justify-between bg-white px-3 py-2 border border-amber-100 rounded-lg">
                           <span className="font-mono text-sm text-slate-800">{editingElection.admins[0].username}</span>
                           <button 
                             type="button" 
                             onClick={() => copyToClipboard(editingElection.admins[0].username, "Username")}
-                            className="text-blue-500 hover:text-blue-700"
+                            className="text-amber-500 hover:text-amber-700"
                           >
                             <Copy size={14} />
                           </button>
                         </div>
                       </div>
                       <div className="space-y-1">
-                        <label className="text-xs font-semibold text-blue-700 uppercase tracking-wider">Password</label>
-                        <div className="flex items-center justify-between bg-white px-3 py-2 border border-blue-100 rounded-lg">
+                        <label className="text-xs font-semibold text-amber-700 uppercase tracking-wider">Password</label>
+                        <div className="flex items-center justify-between bg-white px-3 py-2 border border-amber-100 rounded-lg">
                           <span className="font-mono text-sm text-slate-800">
                             {showPassword ? editingElection.admins[0].password : '••••••••'}
                           </span>
@@ -321,14 +321,14 @@ export default function ElectionsManagementPage() {
                             <button 
                               type="button" 
                               onClick={() => setShowPassword(!showPassword)}
-                              className="text-blue-500 hover:text-blue-700"
+                              className="text-amber-500 hover:text-amber-700"
                             >
                               {showPassword ? <EyeOff size={14} /> : <Eye size={14} />}
                             </button>
                             <button 
                               type="button" 
                               onClick={() => copyToClipboard(editingElection.admins[0].password, "Password")}
-                              className="text-blue-500 hover:text-blue-700"
+                              className="text-amber-500 hover:text-amber-700"
                             >
                               <Copy size={14} />
                             </button>
@@ -337,7 +337,7 @@ export default function ElectionsManagementPage() {
                       </div>
                     </div>
                   ) : (
-                    <p className="text-sm text-blue-700">Tidak ada admin yang terhubung ke event ini.</p>
+                    <p className="text-sm text-amber-700">Tidak ada admin yang terhubung ke event ini.</p>
                   )}
                 </div>
 
@@ -349,7 +349,7 @@ export default function ElectionsManagementPage() {
                     <input 
                       type="text" 
                       required
-                      className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent outline-none"
+                      className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-amber-600 focus:border-transparent outline-none"
                       value={editName}
                       onChange={(e) => setEditName(e.target.value)}
                     />
@@ -370,7 +370,7 @@ export default function ElectionsManagementPage() {
                       <label className="text-sm font-medium text-slate-700">Tingkat Pimpinan</label>
                       <select
                         required
-                        className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent outline-none bg-white"
+                        className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-amber-600 focus:border-transparent outline-none bg-white"
                         value={editLevel}
                         onChange={(e) => setEditLevel(e.target.value)}
                       >
@@ -386,7 +386,7 @@ export default function ElectionsManagementPage() {
                         type="number" 
                         min="1"
                         required
-                        className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent outline-none"
+                        className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-amber-600 focus:border-transparent outline-none"
                         value={editMaxSelected}
                         onChange={(e) => setEditMaxSelected(parseInt(e.target.value) || 9)}
                       />
@@ -400,7 +400,7 @@ export default function ElectionsManagementPage() {
                       <input 
                         type="text" 
                         placeholder="Kosongkan jika tidak ingin mengubah password"
-                        className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent outline-none"
+                        className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-amber-600 focus:border-transparent outline-none"
                         value={editAdminPassword}
                         onChange={(e) => setEditAdminPassword(e.target.value)}
                       />
@@ -420,7 +420,7 @@ export default function ElectionsManagementPage() {
                   <button 
                     type="submit" 
                     disabled={isUpdating}
-                    className="px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg disabled:opacity-70 transition-colors"
+                    className="px-5 py-2 bg-amber-600 hover:bg-amber-700 text-white font-medium rounded-lg disabled:opacity-70 transition-colors"
                   >
                     {isUpdating ? "Menyimpan..." : "Simpan Perubahan"}
                   </button>

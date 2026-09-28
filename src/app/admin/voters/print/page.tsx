@@ -43,7 +43,7 @@ export default function PrintVoters() {
         <p className="font-medium text-slate-600">Tekan tombol di bawah atau CTRL+P untuk mencetak Token & QR Code.</p>
         <div className="space-x-4">
           <a href={`${basePath}/voters`} className="px-4 py-2 bg-white border border-slate-300 rounded hover:bg-slate-50">Kembali</a>
-          <button onClick={() => window.print()} className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">Cetak Sekarang</button>
+          <button onClick={() => window.print()} className="px-4 py-2 bg-amber-600 text-white rounded hover:bg-amber-700">Cetak Sekarang</button>
         </div>
       </div>
 
