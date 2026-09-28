@@ -4,6 +4,7 @@ import { toast } from "sonner";
 import { useState, useEffect } from "react";
 import { Plus, Trash2, X, Image as ImageIcon } from "lucide-react";
 import { getCandidates, addCandidate, deleteCandidate } from "@/app/actions/candidates";
+import { getAdminElectionInfo } from "@/app/actions/elections";
 
 type Candidate = {
   id: string;
@@ -18,10 +19,15 @@ export default function AdminCandidates() {
   const [loading, setLoading] = useState(true);
   const [showAddModal, setShowAddModal] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const [electionName, setElectionName] = useState('PC IPM Wirobrajan');
 
   async function fetchCandidates() {
     const { data } = await getCandidates();
     if (data) setCandidates(data);
+    
+    const { election } = await getAdminElectionInfo();
+    if (election) setElectionName(election.name);
+    
     setLoading(false);
   }
 
@@ -98,7 +104,7 @@ export default function AdminCandidates() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-slate-800 tracking-tight">Data Kandidat Formatur</h1>
-          <p className="text-slate-500 mt-1">Kelola data calon formatur PC IPM Wirobrajan.</p>
+          <p className="text-slate-500 mt-1">Kelola data calon formatur {electionName}.</p>
         </div>
         <button 
           onClick={() => setShowAddModal(true)}

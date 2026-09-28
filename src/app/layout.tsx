@@ -6,8 +6,8 @@ import clsx from "clsx";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "E-Voting Formatur PC IPM Wirobrajan",
-  description: "Website resmi pemilihan formatur PC IPM Wirobrajan.",
+  title: "E-Voting Formatur",
+  description: "Website resmi sistem E-Voting Formatur.",
 };
 
 import { Toaster } from "sonner";
