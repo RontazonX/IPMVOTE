@@ -108,32 +108,33 @@ export default function KandidatSlugPage() {
             {candidates.map((candidate) => (
               <div 
                 key={candidate.id}
-                className="bg-white rounded-2xl sm:rounded-3xl border border-slate-200 overflow-hidden flex flex-col hover:border-amber-400 hover:shadow-lg hover:-translate-y-1 transition-all duration-300 group"
+                className="group relative bg-white rounded-3xl border-2 border-transparent transition-all duration-300 flex flex-col p-2.5 shadow-[0_2px_20px_rgba(0,0,0,0.04)] hover:shadow-[0_8px_30px_rgba(0,0,0,0.08)] hover:-translate-y-1 hover:border-slate-100"
               >
-                <div className="w-full aspect-[3/4] sm:aspect-[4/5] bg-slate-100 relative overflow-hidden">
-                  <div className="absolute top-2 left-2 sm:top-4 sm:left-4 w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-amber-500 text-white flex items-center justify-center font-black text-sm sm:text-base shadow-lg z-20 border-2 border-white">
-                    {candidate.order_number}
-                  </div>
-                  
+                {/* Image Container */}
+                <div className="w-full aspect-[4/5] rounded-2xl overflow-hidden bg-slate-100 relative mb-3 sm:mb-4">
                   {candidate.photo_url ? (
                     <img src={candidate.photo_url} alt={candidate.name} className="w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-105" />
                   ) : (
-                    <div className="w-full h-full flex flex-col items-center justify-center text-slate-400 bg-slate-100">
-                      <ImageIcon size={32} className="mb-2 opacity-20 sm:w-12 sm:h-12" />
-                      <span className="text-xs sm:text-sm font-medium">Tanpa Foto</span>
+                    <div className="w-full h-full flex flex-col items-center justify-center text-slate-300 bg-slate-50">
+                      <ImageIcon size={40} className="mb-2 opacity-50" />
+                      <span className="text-xs font-medium text-slate-400">Tanpa Foto</span>
                     </div>
                   )}
+
+                  {/* Order Number Badge */}
+                  <div className="absolute top-2.5 left-2.5 sm:top-3 sm:left-3 bg-white/90 backdrop-blur-md text-slate-900 font-black text-xs sm:text-sm px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-xl shadow-sm border border-white/50 z-20">
+                    #{candidate.order_number}
+                  </div>
                 </div>
 
-                <div className="p-4 sm:p-5 flex-grow flex flex-col justify-between bg-white relative z-10 border-t border-slate-100">
-                  <div>
-                    <h3 className="font-bold text-sm sm:text-lg mb-1.5 leading-tight text-slate-900 group-hover:text-amber-600 transition-colors">
-                      {candidate.name}
-                    </h3>
-                    <div className="flex items-start sm:items-center gap-1.5 text-xs sm:text-sm font-medium text-slate-500 bg-slate-50 px-2.5 py-1.5 rounded-lg border border-slate-100 w-fit">
-                      <Building size={14} className="text-amber-500 flex-shrink-0" />
-                      <span className="line-clamp-1">{candidate.asal_pimpinan}</span>
-                    </div>
+                {/* Text Info */}
+                <div className="px-1.5 pb-1 sm:pb-2">
+                  <h3 className="font-bold text-sm sm:text-base leading-snug mb-1 sm:mb-1.5 text-slate-900 group-hover:text-amber-600 transition-colors">
+                    {candidate.name}
+                  </h3>
+                  <div className="flex items-start gap-1.5 text-[11px] sm:text-xs font-medium text-slate-500">
+                    <Building size={14} className="shrink-0 mt-0.5 text-slate-400 group-hover:text-amber-500 transition-colors" />
+                    <span className="line-clamp-2 leading-tight">{candidate.asal_pimpinan}</span>
                   </div>
                 </div>
               </div>

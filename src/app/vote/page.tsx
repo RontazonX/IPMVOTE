@@ -113,45 +113,46 @@ export default function VotePage() {
                 key={candidate.id}
                 onClick={() => toggleSelection(candidate.id)}
                 className={`
-                  group relative bg-white rounded-2xl sm:rounded-3xl border transition-all duration-300 cursor-pointer overflow-hidden flex flex-col
+                  group relative bg-white rounded-3xl border-2 transition-all duration-300 cursor-pointer flex flex-col p-2.5
                   ${isSelected 
-                    ? 'border-amber-500 shadow-sm bg-amber-50/10' 
-                    : 'border-slate-200 hover:border-amber-400 hover:shadow-md hover:-translate-y-1'
+                    ? 'border-amber-500 bg-amber-50/30 shadow-[0_8px_30px_rgba(245,158,11,0.15)] -translate-y-1' 
+                    : 'border-transparent shadow-[0_2px_20px_rgba(0,0,0,0.04)] hover:shadow-[0_8px_30px_rgba(0,0,0,0.08)] hover:-translate-y-1 hover:border-slate-100'
                   }
                 `}
               >
-                {/* Checkbox indicator */}
-                <div className={`
-                  absolute top-2 right-2 sm:top-4 sm:right-4 w-6 h-6 sm:w-8 sm:h-8 rounded-full border-2 flex items-center justify-center transition-all z-20 bg-white
-                  ${isSelected ? 'bg-amber-500 border-amber-500 text-white scale-110' : 'border-slate-200 text-transparent group-hover:border-amber-400 group-hover:bg-amber-50'}
-                `}>
-                  <CheckCircle2 className={`w-4 h-4 sm:w-5 sm:h-5 ${isSelected ? "opacity-100" : "opacity-0 group-hover:opacity-50 text-amber-500"}`} />
-                </div>
-
-                {/* Order Number Badge */}
-                <div className="absolute top-2 left-2 sm:top-4 sm:left-4 w-7 h-7 sm:w-9 sm:h-9 rounded-full bg-slate-900 text-white flex items-center justify-center font-bold text-sm sm:text-base shadow-sm z-20 border border-white">
-                  {candidate.order_number}
-                </div>
-
-                {/* Candidate Photo Header */}
-                <div className="w-full aspect-[3/4] sm:aspect-[4/5] bg-slate-100 relative overflow-hidden">
+                {/* Image Container */}
+                <div className="w-full aspect-[4/5] rounded-2xl overflow-hidden bg-slate-100 relative mb-3 sm:mb-4">
                   {candidate.photo_url ? (
                     <img src={candidate.photo_url} alt={candidate.name} className="w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-105" />
                   ) : (
-                    <div className="w-full h-full flex flex-col items-center justify-center text-slate-400 bg-slate-100">
-                      <ImageIcon size={32} className="mb-2 sm:mb-3 opacity-20 sm:w-12 sm:h-12" />
-                      <span className="text-xs sm:text-sm font-medium">Tanpa Foto</span>
+                    <div className="w-full h-full flex flex-col items-center justify-center text-slate-300 bg-slate-50">
+                      <ImageIcon size={40} className="mb-2 opacity-50" />
+                      <span className="text-xs font-medium text-slate-400">Tanpa Foto</span>
                     </div>
                   )}
+
+                  {/* Order Number Badge */}
+                  <div className="absolute top-2.5 left-2.5 sm:top-3 sm:left-3 bg-white/90 backdrop-blur-md text-slate-900 font-black text-xs sm:text-sm px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-xl shadow-sm border border-white/50 z-20">
+                    #{candidate.order_number}
+                  </div>
+
+                  {/* Checkbox indicator */}
+                  <div className={`
+                    absolute top-2.5 right-2.5 sm:top-3 sm:right-3 w-7 h-7 sm:w-8 sm:h-8 rounded-full border flex items-center justify-center transition-all z-20 backdrop-blur-md
+                    ${isSelected ? 'bg-amber-500 border-amber-500 text-white shadow-md scale-110' : 'bg-white/80 border-slate-200 text-transparent shadow-sm group-hover:border-amber-300'}
+                  `}>
+                    <CheckCircle2 className={`w-4 h-4 sm:w-5 sm:h-5 ${isSelected ? "opacity-100" : "opacity-0 group-hover:opacity-30 text-amber-500"}`} />
+                  </div>
                 </div>
 
-                <div className="p-3 sm:p-5 flex-grow flex flex-col justify-between bg-white relative z-10 border-t border-slate-100">
-                  <div>
-                    <h3 className={`font-bold text-sm sm:text-lg mb-1 sm:mb-1.5 leading-tight transition-colors ${isSelected ? 'text-amber-700' : 'text-slate-900 group-hover:text-amber-600'}`}>{candidate.name}</h3>
-                    <div className="flex items-start sm:items-center gap-1 sm:gap-1.5 text-xs sm:text-sm font-medium text-slate-500">
-                      <Building size={12} className="text-slate-400 flex-shrink-0 mt-0.5 sm:mt-0 sm:w-3.5 sm:h-3.5" />
-                      <span className="line-clamp-2 sm:truncate leading-tight">{candidate.asal_pimpinan}</span>
-                    </div>
+                {/* Text Info */}
+                <div className="px-1.5 pb-1 sm:pb-2">
+                  <h3 className={`font-bold text-sm sm:text-base leading-snug mb-1 sm:mb-1.5 transition-colors ${isSelected ? 'text-amber-700' : 'text-slate-900'}`}>
+                    {candidate.name}
+                  </h3>
+                  <div className="flex items-start gap-1.5 text-[11px] sm:text-xs font-medium text-slate-500">
+                    <Building size={14} className={`shrink-0 mt-0.5 ${isSelected ? 'text-amber-500' : 'text-slate-400'}`} />
+                    <span className="line-clamp-2 leading-tight">{candidate.asal_pimpinan}</span>
                   </div>
                 </div>
               </div>
