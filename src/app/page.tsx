@@ -68,7 +68,6 @@ export default async function LandingPage() {
           </div>
           <nav className="hidden md:flex items-center gap-8 font-medium text-slate-500">
             <a href="#home" className="hover:text-amber-500 transition-colors">Beranda</a>
-            <Link href="/kandidat" className="hover:text-amber-500 transition-colors text-amber-600 font-bold">Cek Calon Formatur</Link>
             <a href="#fitur" className="hover:text-amber-500 transition-colors">Fitur Unggulan</a>
             <a href="#cara-voting" className="hover:text-amber-500 transition-colors">Cara Voting</a>
             <a href="#about" className="hover:text-amber-500 transition-colors">Tentang</a>
@@ -121,7 +120,7 @@ export default async function LandingPage() {
             <p className={`text-lg md:text-xl max-w-3xl mx-auto mb-10 leading-relaxed ${bgSettings.background_type === 'default' ? 'text-slate-600' : 'text-slate-200'}`}>
               Solusi digital terbaik untuk Musyran, Musycab, Musyda, hingga Muktamar. Kelola pemilihan formatur dengan mudah, aman, hemat biaya, dan dukung banyak pemilihan sekaligus secara bersamaan.
             </p>
-            <div className="flex flex-col sm:flex-row flex-wrap items-center justify-center gap-4">
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <Link
                 href="/login"
                 className="w-full sm:w-auto bg-amber-500 hover:bg-amber-600 text-white text-lg px-8 py-4 rounded-full font-bold transition-all transform hover:-translate-y-1 flex items-center justify-center gap-2 shadow-lg shadow-amber-500/20"
@@ -129,10 +128,10 @@ export default async function LandingPage() {
                 Masuk ke Bilik Suara <ArrowRight size={20} />
               </Link>
               <Link
-                href="/kandidat"
+                href="#fitur"
                 className={`w-full sm:w-auto text-lg px-8 py-4 rounded-full font-bold transition-all flex items-center justify-center gap-2 border ${bgSettings.background_type === 'default' ? 'bg-white hover:bg-slate-50 text-slate-700 border-slate-300' : 'bg-slate-800/80 hover:bg-slate-700 text-white border-slate-600 backdrop-blur-sm'}`}
               >
-                Cek Calon Formatur
+                Pelajari Fitur
               </Link>
             </div>
           </div>
