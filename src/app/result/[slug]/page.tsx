@@ -61,18 +61,25 @@ export default function ResultPage() {
       const eId = election.id;
 
       // 2. Fetch results if published
-      const { count: totalVoters } = await supabase.from("voters").select("*", { count: "exact", head: true }).eq("election_id", eId);
-      const { count: votedVoters } = await supabase.from("voters").select("*", { count: "exact", head: true }).eq("is_voted", true).eq("election_id", eId);
-      const { count: totalCandidates } = await supabase.from("candidates").select("*", { count: "exact", head: true }).eq("election_id", eId);
+      const [
+        { count: totalVoters },
+        { count: votedVoters },
+        { count: totalCandidates },
+        { data: candidates },
+        { data: votes }
+      ] = await Promise.all([
+        supabase.from("voters").select("id", { count: "exact", head: true }).eq("election_id", eId),
+        supabase.from("voters").select("id", { count: "exact", head: true }).eq("is_voted", true).eq("election_id", eId),
+        supabase.from("candidates").select("id", { count: "exact", head: true }).eq("election_id", eId),
+        supabase.from("candidates").select("id, name, order_number, photo_url").eq("election_id", eId),
+        supabase.from("votes").select("candidate_id").eq("election_id", eId)
+      ]);
 
       setStats({
         totalVoters: totalVoters || 0,
         votedVoters: votedVoters || 0,
         totalCandidates: totalCandidates || 0,
       });
-
-      const { data: candidates } = await supabase.from("candidates").select("id, name, order_number, photo_url").eq("election_id", eId);
-      const { data: votes } = await supabase.from("votes").select("candidate_id").eq("election_id", eId);
 
       if (candidates && votes) {
         const voteCounts: Record<string, number> = {};

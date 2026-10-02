@@ -26,12 +26,15 @@ export default function VotePage() {
 
   useEffect(() => {
     async function fetchData() {
-      const settings = await getVoterElectionSettings();
+      const [settings, res] = await Promise.all([
+        getVoterElectionSettings(),
+        getCandidates()
+      ]);
+      
       if (settings && !settings.error) {
         setMaxSelections(settings.maxSelectedFormaturs || 9);
       }
       
-      const res = await getCandidates();
       if (res.data) {
         setCandidates(res.data);
       }

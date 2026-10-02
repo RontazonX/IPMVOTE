@@ -30,7 +30,6 @@ type Leaderboard = {
 export default function AdminDashboard() {
   const [stats, setStats] = useState<Stats>({ totalVoters: 0, votedVoters: 0, totalCandidates: 0 });
   const [leaderboard, setLeaderboard] = useState<Leaderboard[]>([]);
-  const [demographics, setDemographics] = useState<{region: string, count: number}[]>([]);
   
   const [isPublished, setIsPublished] = useState(false);
   const [toggling, setToggling] = useState(false);
@@ -62,27 +61,34 @@ export default function AdminDashboard() {
         const supabase = createClient();
         const eId = infoRes.election.id;
         
-        const { count: totalVoters } = await supabase.from("voters").select("*", { count: "exact", head: true }).eq("election_id", eId);
-        const { count: votedVoters } = await supabase.from("voters").select("*", { count: "exact", head: true }).eq("is_voted", true).eq("election_id", eId);
-        const { count: totalCandidates } = await supabase.from("candidates").select("*", { count: "exact", head: true }).eq("election_id", eId);
+        const [
+          { count: totalVoters },
+          { count: votedVoters },
+          { count: totalCandidates },
+          { data: candidates },
+          { data: votes }
+        ] = await Promise.all([
+          supabase.from("voters").select("id", { count: "exact", head: true }).eq("election_id", eId),
+          supabase.from("voters").select("id", { count: "exact", head: true }).eq("is_voted", true).eq("election_id", eId),
+          supabase.from("candidates").select("id", { count: "exact", head: true }).eq("election_id", eId),
+          supabase.from("candidates").select("id, name, order_number, photo_url").eq("election_id", eId),
+          supabase.from("votes").select("candidate_id").eq("election_id", eId)
+        ]);
         
         setStats({
           totalVoters: totalVoters || 0,
           votedVoters: votedVoters || 0,
           totalCandidates: totalCandidates || 0,
         });
-        
-        const { data: candidates } = await supabase.from("candidates").select("id, name, order_number, photo_url").eq("election_id", eId);
-        const { data: votes } = await supabase.from("votes").select("candidate_id, created_at").eq("election_id", eId);
 
         if (candidates && votes) {
           const voteCounts: Record<string, number> = {};
           
-          votes.forEach(v => {
+          votes.forEach((v: any) => {
             voteCounts[v.candidate_id] = (voteCounts[v.candidate_id] || 0) + 1;
           });
 
-          const board: Leaderboard[] = candidates.map(c => ({
+          const board: Leaderboard[] = candidates.map((c: any) => ({
             candidateId: c.id,
             name: c.name,
             no: c.order_number,
@@ -96,17 +102,6 @@ export default function AdminDashboard() {
           });
 
           setLeaderboard(board);
-        }
-
-        const { data: votersList } = await supabase.from("voters").select("asal_pimpinan").eq("election_id", eId);
-        if (votersList) {
-          const regionCounts: Record<string, number> = {};
-          votersList.forEach(v => {
-            const region = v.asal_pimpinan || "Lainnya";
-            regionCounts[region] = (regionCounts[region] || 0) + 1;
-          });
-          const demoData = Object.keys(regionCounts).map(k => ({ region: k, count: regionCounts[k] }));
-          setDemographics(demoData);
         }
       }
       setLoading(false);
