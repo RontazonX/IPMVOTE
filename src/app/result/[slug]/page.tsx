@@ -19,6 +19,7 @@ type Leaderboard = {
   name: string;
   no: number;
   votes: number;
+  photo_url?: string;
 };
 
 export default function ResultPage() {
@@ -83,7 +84,8 @@ export default function ResultPage() {
           candidateId: c.id,
           name: c.name,
           no: c.order_number,
-          votes: voteCounts[c.id] || 0
+          votes: voteCounts[c.id] || 0,
+          photo_url: c.photo_url
         }));
 
         board.sort((a, b) => {
@@ -186,10 +188,16 @@ export default function ResultPage() {
                 <div className="absolute -right-6 -bottom-6 text-9xl font-black text-slate-50 group-hover:text-amber-50 transition-colors z-0 select-none">
                   {index + 1}
                 </div>
-                <div className="w-16 h-16 rounded-2xl bg-amber-500 text-white flex items-center justify-center font-bold text-2xl z-10">
-                  #{index + 1}
-                </div>
-                <div className="z-10">
+                {l.photo_url ? (
+                  <div className="w-16 h-16 rounded-2xl overflow-hidden bg-slate-100 z-10 border border-slate-200">
+                    <img src={l.photo_url} alt={l.name} className="w-full h-full object-cover object-top" />
+                  </div>
+                ) : (
+                  <div className="w-16 h-16 rounded-2xl bg-amber-500 text-white flex items-center justify-center font-bold text-2xl z-10">
+                    #{index + 1}
+                  </div>
+                )}
+                <div className="z-10 flex-1">
                   <h3 className="font-bold text-xl text-slate-900 line-clamp-1">{l.name}</h3>
                   <p className="text-sm font-medium text-slate-500 mb-2">No. Urut {l.no}</p>
                   <div className="bg-emerald-50 border border-emerald-100 text-emerald-700 font-bold px-3 py-1 rounded-lg w-fit text-sm">

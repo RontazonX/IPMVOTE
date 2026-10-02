@@ -21,6 +21,7 @@ export default function VotePage() {
   const [submitting, setSubmitting] = useState(false);
   const [maxSelections, setMaxSelections] = useState(9);
   const [loading, setLoading] = useState(true);
+  const [showReviewModal, setShowReviewModal] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -47,20 +48,22 @@ export default function VotePage() {
     });
   };
 
-  const handleSubmit = async () => {
+  const handleReview = () => {
     if (selectedIds.length !== maxSelections) {
       toast.error(`Anda baru memilih ${selectedIds.length} dari ${maxSelections} formatur yang wajib dipilih!`);
       return;
     }
+    setShowReviewModal(true);
+  };
 
-    if (!confirm("Apakah Anda yakin dengan pilihan ini? Suara tidak dapat diubah setelah dikirim.")) return;
-
+  const handleSubmit = async () => {
     setSubmitting(true);
     const res = await submitVote(selectedIds);
     setSubmitting(false);
 
     if (res.error) {
       toast.error(res.error);
+      setShowReviewModal(false);
     } else {
       toast.success("Suara berhasil dikirim! Terima kasih atas partisipasi Anda.");
       router.push("/");
@@ -171,8 +174,8 @@ export default function VotePage() {
           </div>
           
           <button
-            onClick={handleSubmit}
-            disabled={selectedIds.length !== maxSelections || submitting}
+            onClick={handleReview}
+            disabled={selectedIds.length !== maxSelections}
             className={`
               w-full sm:w-auto px-8 py-3 rounded-xl font-bold flex items-center justify-center gap-2 transition-all
               ${selectedIds.length === maxSelections 
@@ -181,10 +184,78 @@ export default function VotePage() {
               }
             `}
           >
-            {submitting ? "Mengirim Suara..." : "Kirim Suara Sekarang"}
+            Review & Kirim Suara
           </button>
         </div>
       </div>
+
+      {/* Review Modal */}
+      {showReviewModal && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
+          <div className="bg-white w-full max-w-2xl rounded-3xl shadow-2xl flex flex-col max-h-[90vh] overflow-hidden animate-in zoom-in-95 duration-200">
+            <div className="p-6 border-b border-slate-100 flex items-center justify-between bg-slate-50">
+              <div>
+                <h3 className="text-xl font-bold text-slate-900">Review Pilihan Formatur</h3>
+                <p className="text-sm text-slate-500">Pastikan pilihan Anda sudah benar sebelum dikirim permanen.</p>
+              </div>
+              <button 
+                onClick={() => setShowReviewModal(false)}
+                className="w-10 h-10 bg-white rounded-full flex items-center justify-center text-slate-400 hover:text-slate-600 shadow-sm border border-slate-200"
+              >
+                &times;
+              </button>
+            </div>
+            
+            <div className="flex-1 overflow-y-auto p-6 bg-white">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {candidates
+                  .filter(c => selectedIds.includes(c.id))
+                  .sort((a, b) => a.order_number - b.order_number)
+                  .map(candidate => (
+                    <div key={candidate.id} className="flex items-center gap-4 p-3 rounded-xl border border-slate-200 bg-slate-50">
+                      <div className="w-14 h-14 bg-slate-200 rounded-lg overflow-hidden shrink-0 relative">
+                        {candidate.photo_url ? (
+                          <img src={candidate.photo_url} alt={candidate.name} className="w-full h-full object-cover object-top" />
+                        ) : (
+                          <div className="w-full h-full flex items-center justify-center text-slate-400">
+                            <ImageIcon size={20} />
+                          </div>
+                        )}
+                        <div className="absolute bottom-0 right-0 bg-slate-900 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-tl-md">
+                          {candidate.order_number}
+                        </div>
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="font-bold text-slate-900 text-sm truncate">{candidate.name}</p>
+                        <p className="text-xs text-slate-500 flex items-center gap-1 mt-0.5">
+                          <Building size={10} className="shrink-0" />
+                          <span className="truncate">{candidate.asal_pimpinan}</span>
+                        </p>
+                      </div>
+                    </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="p-6 border-t border-slate-100 bg-slate-50 flex gap-3 sm:gap-4 flex-col sm:flex-row">
+              <button 
+                onClick={() => setShowReviewModal(false)}
+                disabled={submitting}
+                className="flex-1 py-3 px-4 bg-white border border-slate-300 rounded-xl font-bold text-slate-700 hover:bg-slate-50 transition-colors"
+              >
+                Batal, Ubah Pilihan
+              </button>
+              <button 
+                onClick={handleSubmit}
+                disabled={submitting}
+                className="flex-1 py-3 px-4 bg-amber-500 hover:bg-amber-600 text-white rounded-xl font-bold transition-all flex items-center justify-center gap-2 shadow-lg shadow-amber-500/30"
+              >
+                {submitting ? "Memproses..." : "Ya, Kirim Suara Permanen"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
